@@ -8,7 +8,8 @@ public class Board {
     private Ball playerBall;
     private Boundary bounds;
     private Pair<Hole,Hole> holes;
-    
+    private final Map<Role, Integer> scores = new EnumMap<>(Role.class);
+
     public Board(){} 
     
     public void init(BoardConf conf) {
@@ -16,6 +17,8 @@ public class Board {
     	playerBall = conf.getPlayerBall(); 
     	bounds = conf.getBoardBoundary();
         holes = conf.getHoles();
+        scores.put(Role.PLAYER, 0);
+        scores.put(Role.BOT, 0);
     }
     
     public void updateState(long dt) {
@@ -51,5 +54,13 @@ public class Board {
 
     public Pair<Hole, Hole> getHoles() {
         return holes;
+    }
+
+    public void incrementScore(Role hitter) {
+        scores.computeIfPresent(hitter, (k, v) -> v + 1);
+    }
+
+    public synchronized int getScore(Role type) {
+        return scores.getOrDefault(type, 0);
     }
 }
