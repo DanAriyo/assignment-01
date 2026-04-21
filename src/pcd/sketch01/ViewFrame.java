@@ -84,7 +84,7 @@ public class ViewFrame extends JFrame {
 				var holes = model.getHoles();
 				var hole1 = holes.x();
 				var hole2 = holes.y();
-				
+
 				int xHole1 = (int)(ox + hole1.pos().x()*delta);
 				int yHole1 = (int)(oy - hole1.pos().y()*delta);
 				int radiusXhole1 = (int)(hole1.radius()*delta);
@@ -112,8 +112,8 @@ public class ViewFrame extends JFrame {
 	    		}
     		    
     		    g2.setStroke(new BasicStroke(1));
-	    		g2.drawString("Num small balls: " + model.getBalls().size(), 20, 40);
-	    		g2.drawString("Frame per sec: " + model.getFramePerSec(), 20, 60);
+	    		g2.drawString("Num small balls: " + model.getBalls().size(), 100, 40);
+	    		g2.drawString("Frame per sec: " + model.getFramePerSec(), 100, 60);
 
 	    		sync.notifyFrameRendered();
     		
