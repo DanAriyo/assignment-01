@@ -27,8 +27,16 @@ public class Hole {
          */
         return dist < minD && dist > 1e-6;
 
-
     }
+
+    public P2d getPos(){
+        return pos;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
 
 
 }
