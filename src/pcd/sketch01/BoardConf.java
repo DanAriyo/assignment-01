@@ -9,4 +9,6 @@ public interface BoardConf {
 	Ball getPlayerBall();
 	
 	List<Ball> getSmallBalls();
+
+	Pair<Hole,Hole> getHoles();
 }

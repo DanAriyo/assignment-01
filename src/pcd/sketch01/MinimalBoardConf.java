@@ -21,6 +21,11 @@ public class MinimalBoardConf implements BoardConf {
 	}
 
 	@Override
+	public Pair<Hole, Hole> getHoles() {
+		return new Pair<>(new Hole(null,0), new Hole(null,0));
+	}
+
+	@Override
 	public Boundary getBoardBoundary() {
         return new Boundary(-1.5,-1.0,1.5,1.0);
 	}

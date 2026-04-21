@@ -7,6 +7,7 @@ public class Board {
     private List<Ball> balls;    
     private Ball playerBall;
     private Boundary bounds;
+    private Pair<Hole,Hole> holes;
     
     public Board(){} 
     
@@ -14,6 +15,7 @@ public class Board {
     	balls = conf.getSmallBalls();    	
     	playerBall = conf.getPlayerBall(); 
     	bounds = conf.getBoardBoundary();
+        holes = conf.getHoles();
     }
     
     public void updateState(long dt) {
@@ -45,5 +47,9 @@ public class Board {
     
     public  Boundary getBounds(){
         return bounds;
+    }
+
+    public Pair<Hole, Hole> getHoles() {
+        return holes;
     }
 }
