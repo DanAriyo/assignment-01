@@ -1,5 +1,8 @@
 package pcd.sketch01;
 
+import java.util.EnumMap;
+import java.util.Optional;
+
 public class Ball {
     
     private P2d pos;
@@ -7,6 +10,7 @@ public class Ball {
     private double radius;
     private double mass;
     private Role role;
+    private static Optional<Role> lastHitter = Optional.empty();
     
     private static double FRICTION_FACTOR = 0.25; 	/* 0 minimum */
     private static double RESTITUTION_FACTOR = 1; 
@@ -18,6 +22,29 @@ public class Ball {
        this.vel = vel;
        this.role = role;
     }
+
+    private void setLastHitter(Role hitter) {
+        lastHitter = Optional.ofNullable(hitter);
+    }
+
+    private static void updateLastHitter(Ball a, Ball b) {
+
+        if (isStriker(a) && b.getRole() == Role.GENERIC) {
+            b.setLastHitter(a.getRole());
+        }
+        else if (isStriker(b) && a.getRole() == Role.GENERIC) {
+            a.setLastHitter(b.getRole());
+        }
+        else if (a.getRole() == Role.GENERIC && b.getRole() == Role.GENERIC) {
+            a.resetLastHitter();
+            b.resetLastHitter();
+        }
+    }
+
+    private static boolean isStriker(Ball ball) {
+        return ball.getRole() == Role.PLAYER || ball.getRole() == Role.BOT;
+    }
+
 
     public void updateState(long dt, Board ctx){
         double speed = vel.abs();
@@ -68,6 +95,8 @@ public class Ball {
      * @param b
      */
     public static void resolveCollision(Ball a, Ball b) {
+
+        updateLastHitter(a, b);
         
     	/* check if there is a collision */
     	
@@ -150,6 +179,18 @@ public class Ball {
     
     public double getRadius() {
     	return radius;
+    }
+
+    public Role getRole(){
+        return this.role;
+    }
+
+    public Optional<Role> getLastHitter() {
+        return lastHitter;
+    }
+
+    private void resetLastHitter() {
+        this.lastHitter = Optional.empty();
     }
 
 }
