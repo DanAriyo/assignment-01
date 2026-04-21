@@ -10,7 +10,7 @@ public class Hole {
         this.radius = radius;
     }
 
-    public static boolean resolveCollision(Ball ball, Hole hole){
+    public static boolean checkCollision(Ball ball, Hole hole){
         /* check if there is a collision */
 
         /* compute dv = b.pos - a.pos vector */

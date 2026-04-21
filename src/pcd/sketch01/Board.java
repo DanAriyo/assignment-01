@@ -36,7 +36,14 @@ public class Board {
         }
     	for (var b: balls) {
     		Ball.resolveCollision(playerBall, b);
-    	} 
+    	}
+        balls.removeIf(b -> {
+            if (Hole.checkCollision(b, holes.x()) || Hole.checkCollision(b, holes.y())) {
+                b.getLastHitter().ifPresent(this::incrementScore);
+                return true;
+            }
+            return false;
+        });
     	   	    	
     }
     
