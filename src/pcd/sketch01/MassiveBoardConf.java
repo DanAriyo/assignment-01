@@ -7,7 +7,7 @@ public class MassiveBoardConf implements BoardConf {
 
 	@Override
 	public Ball getPlayerBall() {
-		return  new Ball(new P2d(0, -0.75), 0.05, 1.5, new V2d(0,0)); 
+		return  new Ball(new P2d(0, -0.75), 0.05, 1.5, new V2d(0,0),Role.BOT);
 	}
 
 	@Override
@@ -19,7 +19,7 @@ public class MassiveBoardConf implements BoardConf {
     		for (int col = 0; col < 150; col++) {
         		var px = -1.0 + col*0.015;
         		var py =  row*0.015;
-        		var b = new Ball(new P2d(px, py), ballRadius, 0.25, new V2d(0,0));
+        		var b = new Ball(new P2d(px, py), ballRadius, 0.25, new V2d(0,0),Role.GENERIC);
             	balls.add(b);    			
     		}
     	}		
