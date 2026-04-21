@@ -22,7 +22,7 @@ public class MinimalBoardConf implements BoardConf {
 
 	@Override
 	public Pair<Hole, Hole> getHoles() {
-		return new Pair<>(new Hole(new P2d(-1.5,1.0),0), new Hole(new P2d(1.5,-1.0),2));
+		return new Pair<>(new Hole(new P2d(-1.5,1.0),0.2), new Hole(new P2d(1.5,1.0),0.2));
 	}
 
 	@Override

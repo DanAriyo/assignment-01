@@ -79,6 +79,26 @@ public class ViewFrame extends JFrame {
 	                int radiusY = (int)(b.radius()*delta);
 	                g2.drawOval(x0 - radiusX,y0 - radiusY,radiusX*2,radiusY*2);
 	    		}
+
+				g2.setStroke(new BasicStroke(2));
+				var holes = model.getHoles();
+				var hole1 = holes.x();
+				var hole2 = holes.y();
+				
+				int xHole1 = (int)(ox + hole1.pos().x()*delta);
+				int yHole1 = (int)(oy - hole1.pos().y()*delta);
+				int radiusXhole1 = (int)(hole1.radius()*delta);
+				int radiusYhole1 = (int)(hole1.radius()*delta);
+				g2.drawOval(xHole1 - radiusXhole1, yHole1 - radiusYhole1, radiusXhole1*2,radiusYhole1*2);
+				g2.fillOval(xHole1 - radiusXhole1, yHole1 - radiusYhole1, radiusXhole1*2,radiusYhole1*2);
+
+				int xHole2 = (int)(ox + hole2.pos().x()*delta);
+				int yHole2 = (int)(oy - hole2.pos().y()*delta);
+				int radiusXhole2 = (int)(hole2.radius()*delta);
+				int radiusYhole2 = (int)(hole2.radius()*delta);
+				g2.drawOval(xHole2 - radiusXhole2, yHole2 - radiusYhole2, radiusXhole2*2,radiusYhole2*2);
+				g2.fillOval(xHole2 - radiusXhole2, yHole2 - radiusYhole2, radiusXhole2*2,radiusYhole2*2);
+
 	
     		    g2.setStroke(new BasicStroke(3));
 	    		var pb = model.getPlayerBall();
