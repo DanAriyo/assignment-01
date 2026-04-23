@@ -1,22 +1,30 @@
 package pcd.sketch01;
 
+import pcd.sketch01.controller.*;
+
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 
-public class ViewFrame extends JFrame {
+public class ViewFrame extends JFrame implements KeyListener {
     
     private VisualiserPanel panel;
     private ViewModel model;
     private RenderSynch sync;
+	private Integer firstKey = null;
+	private final Controller controller;
     
-    public ViewFrame(ViewModel model, int w, int h){
+    public ViewFrame(ViewModel model, int w, int h,Controller controller){
     	this.model = model;
+		this.controller = controller;
     	this.sync = new RenderSynch();
     	setTitle("Sketch 03");
         setSize(w,h + 25);
@@ -42,8 +50,76 @@ public class ViewFrame extends JFrame {
 			ex.printStackTrace();
 		}
     }
-        
-    public class VisualiserPanel extends JPanel {
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int currentKey = e.getKeyCode();
+
+		if (isArrowKey(currentKey)) {
+			if (firstKey == null) {
+				firstKey = currentKey;
+			} else {
+				Cmd cmd = createComboCommand(firstKey, currentKey);
+				controller.notifyNewCmd(cmd);
+				firstKey = null;
+			}
+		}
+	}
+
+	private boolean isArrowKey(int currentKey) {
+		return currentKey == KeyEvent.VK_UP    ||
+				currentKey == KeyEvent.VK_DOWN  ||
+				currentKey == KeyEvent.VK_LEFT  ||
+				currentKey == KeyEvent.VK_RIGHT;
+	}
+
+	private Cmd createComboCommand(int k1, int k2) {
+		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_RIGHT ||
+				k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_UP) {
+			return new MoveUpRightCmd();
+		}
+		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_LEFT ||
+				k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_UP) {
+			return new MoveUpLeftCmd();
+		}
+		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_LEFT ||
+				k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_DOWN) {
+			return new MoveDownLeftCmd();
+		}
+		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_RIGHT ||
+				k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_DOWN) {
+			return new MoveDownRightCmd();
+		}
+		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_DOWN) {
+			return new MoveDownCmd();
+		}
+
+		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_UP) {
+			return new MoveUpCmd();
+		}
+
+		if (k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_RIGHT) {
+			return new MoveRightCmd();
+		}
+
+		if (k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_LEFT) {
+			return new MoveLeftCmd();
+		}
+
+		return new DefaultCmd();
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
+	}
+
+	public class VisualiserPanel extends JPanel {
         private int ox;
         private int oy;
         private int delta;

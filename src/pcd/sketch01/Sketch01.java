@@ -1,5 +1,7 @@
 package pcd.sketch01;
 
+import pcd.sketch01.controller.Controller;
+
 import java.util.Random;
 
 public class Sketch01 {
@@ -22,7 +24,7 @@ public class Sketch01 {
 		board.init(boardConf);
 		
 		ViewModel viewModel = new ViewModel();
-		View view = new View(viewModel, 1200, 800);
+		View view = new View(viewModel, 1200, 800,new Controller(board));
 						
 		viewModel.update(board, 0);			
 		view.render();
