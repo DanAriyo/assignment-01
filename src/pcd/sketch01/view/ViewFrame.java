@@ -208,6 +208,7 @@ public class ViewFrame extends JFrame implements KeyListener {
 				g2.setFont(new Font("Arial", Font.BOLD, 96));
 				g2.drawString(""+ model.getPlayerScore(),200,600);
 				g2.drawString(""+ model.getBotScore(),900,600);
+				g2.setFont(defaultFont);
 
 
 
