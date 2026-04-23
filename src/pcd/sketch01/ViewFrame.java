@@ -1,6 +1,7 @@
 package pcd.sketch01;
 
 import pcd.sketch01.controller.*;
+import pcd.sketch01.controller.commands.*;
 
 
 import java.awt.BasicStroke;
@@ -21,7 +22,7 @@ public class ViewFrame extends JFrame implements KeyListener {
     private RenderSynch sync;
 	private Integer firstKey = null;
 	private javax.swing.Timer timeoutTimer;
-	private static final int INPUT_TIMEOUT = 2000;
+	private static final int INPUT_TIMEOUT = 1000;
 	private final Controller controller;
     
     public ViewFrame(ViewModel model, int w, int h,Controller controller){

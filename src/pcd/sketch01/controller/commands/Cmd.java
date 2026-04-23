@@ -1,4 +1,4 @@
-package pcd.sketch01.controller;
+package pcd.sketch01.controller.commands;
 
 
 import pcd.sketch01.Board;

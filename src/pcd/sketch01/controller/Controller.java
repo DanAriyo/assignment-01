@@ -1,11 +1,9 @@
 package pcd.sketch01.controller;
 
 import pcd.sketch01.Board;
-import pcd.sketch01.controller.Cmd;
-import pcd.sketch02.util.BoundedBuffer;
-import pcd.sketch02.util.BoundedBufferImpl;
-
-import static java.rmi.server.LogStream.log;
+import pcd.sketch01.controller.commands.Cmd;
+import pcd.sketch01.util.BoundedBuffer;
+import pcd.sketch01.util.BoundedBufferImpl;
 
 public class Controller extends Thread{
 
