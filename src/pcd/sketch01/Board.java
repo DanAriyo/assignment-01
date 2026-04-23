@@ -71,5 +71,9 @@ public class Board {
         return scores.getOrDefault(type, 0);
     }
 
+    public void applyImpulseToPlayerBall(V2d vel){
+        this.playerBall.kick(vel);
+    }
+
 
 }
