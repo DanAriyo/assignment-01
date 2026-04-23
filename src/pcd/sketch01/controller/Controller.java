@@ -1,6 +1,6 @@
 package pcd.sketch01.controller;
 
-import pcd.sketch01.Board;
+import pcd.sketch01.model.Board;
 import pcd.sketch01.controller.commands.Cmd;
 import pcd.sketch01.util.BoundedBuffer;
 import pcd.sketch01.util.BoundedBufferImpl;

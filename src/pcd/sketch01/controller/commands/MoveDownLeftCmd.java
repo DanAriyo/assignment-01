@@ -1,7 +1,7 @@
 package pcd.sketch01.controller.commands;
 
-import pcd.sketch01.Board;
-import pcd.sketch01.V2d;
+import pcd.sketch01.model.Board;
+import pcd.sketch01.model.V2d;
 
 public class MoveDownLeftCmd implements Cmd {
     @Override

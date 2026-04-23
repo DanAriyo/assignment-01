@@ -1,6 +1,5 @@
-package pcd.sketch01;
+package pcd.sketch01.model;
 
-import java.util.EnumMap;
 import java.util.Optional;
 
 public class Ball {

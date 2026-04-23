@@ -1,5 +1,8 @@
-package pcd.sketch01;
+package pcd.sketch01.model.boardConf;
 
+import pcd.sketch01.model.Ball;
+import pcd.sketch01.model.Boundary;
+import pcd.sketch01.model.Hole;
 import pcd.sketch01.util.Pair;
 
 import java.util.List;

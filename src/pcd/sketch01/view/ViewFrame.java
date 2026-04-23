@@ -1,6 +1,5 @@
 package pcd.sketch01.view;
 
-import pcd.sketch01.RenderSynch;
 import pcd.sketch01.controller.*;
 import pcd.sketch01.controller.commands.*;
 

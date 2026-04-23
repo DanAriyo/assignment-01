@@ -1,12 +1,13 @@
-package pcd.sketch01;
+package pcd.sketch01.model;
 
+import pcd.sketch01.model.boardConf.BoardConf;
 import pcd.sketch01.util.Pair;
 
 import java.util.*;
 
 public class Board {
 
-    private List<Ball> balls;    
+    private List<Ball> balls;
     private Ball playerBall;
     private Boundary bounds;
     private Pair<Hole,Hole> holes;

@@ -1,6 +1,8 @@
 package pcd.sketch01;
 
 import pcd.sketch01.controller.Controller;
+import pcd.sketch01.model.Board;
+import pcd.sketch01.model.boardConf.MinimalBoardConf;
 import pcd.sketch01.view.View;
 import pcd.sketch01.view.ViewModel;
 

@@ -1,5 +1,6 @@
-package pcd.sketch01;
+package pcd.sketch01.model.boardConf;
 
+import pcd.sketch01.model.*;
 import pcd.sketch01.util.Pair;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ public class MassiveBoardConf implements BoardConf {
 
 	@Override
 	public Ball getPlayerBall() {
-		return  new Ball(new P2d(0, -0.75), 0.05, 1.5, new V2d(0,0),Role.BOT);
+		return  new Ball(new P2d(0, -0.75), 0.05, 1.5, new V2d(0,0), Role.BOT);
 	}
 
 	@Override
