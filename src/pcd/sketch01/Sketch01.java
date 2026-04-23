@@ -1,6 +1,8 @@
 package pcd.sketch01;
 
 import pcd.sketch01.controller.Controller;
+import pcd.sketch01.view.View;
+import pcd.sketch01.view.ViewModel;
 
 import java.util.Random;
 

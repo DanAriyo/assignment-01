@@ -1,5 +1,7 @@
-package pcd.sketch01;
+package pcd.sketch01.view;
 
+import pcd.sketch01.Board;
+import pcd.sketch01.P2d;
 import pcd.sketch01.util.Pair;
 
 import java.util.ArrayList;
