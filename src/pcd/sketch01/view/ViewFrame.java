@@ -4,11 +4,7 @@ import pcd.sketch01.controller.*;
 import pcd.sketch01.controller.commands.*;
 
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -150,6 +146,8 @@ public class ViewFrame extends JFrame implements KeyListener {
 
         public void paint(Graphics g){
     		Graphics2D g2 = (Graphics2D) g;
+			Font defaultFont = g2.getFont();
+
     		
     		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
     		          RenderingHints.VALUE_ANTIALIAS_ON);
@@ -207,6 +205,12 @@ public class ViewFrame extends JFrame implements KeyListener {
     		    g2.setStroke(new BasicStroke(1));
 	    		g2.drawString("Num small balls: " + model.getBalls().size(), 100, 40);
 	    		g2.drawString("Frame per sec: " + model.getFramePerSec(), 100, 60);
+				g2.setFont(new Font("Arial", Font.BOLD, 96));
+				g2.drawString(""+ model.getPlayerScore(),200,600);
+				g2.drawString(""+ model.getBotScore(),900,600);
+
+
+
 
 	    		sync.notifyFrameRendered();
     		

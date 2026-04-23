@@ -2,6 +2,7 @@ package pcd.sketch01.view;
 
 import pcd.sketch01.model.Board;
 import pcd.sketch01.model.P2d;
+import pcd.sketch01.model.Role;
 import pcd.sketch01.util.Pair;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class ViewModel {
 	private BallViewInfo player;
 	private Pair<HoleViewInfo,HoleViewInfo> holes;
 	private int framePerSec;
+	private Pair<Integer,Integer> scoresPair = null;
 	
 	public ViewModel() {
 		balls = new ArrayList<BallViewInfo>();
@@ -23,6 +25,7 @@ public class ViewModel {
 	}
 	
 	public synchronized void update(Board board, int framePerSec) {
+		this.scoresPair = new Pair<>(board.getScore(Role.PLAYER),board.getScore(Role.BOT));
 		var holesPair = board.getHoles();
 		holes = new Pair<>(new HoleViewInfo(holesPair.x().getPos(),holesPair.x().getRadius()),
 					new HoleViewInfo(holesPair.y().getPos(),holesPair.y().getRadius()));
@@ -51,5 +54,13 @@ public class ViewModel {
 	}
 
 	public synchronized Pair<HoleViewInfo,HoleViewInfo> getHoles(){return this.holes;}
+
+	public synchronized Integer getPlayerScore(){
+		return this.scoresPair.getX();
+	}
+
+	public synchronized Integer getBotScore(){
+		return this.scoresPair.getY();
+	}
 	
 }
