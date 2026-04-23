@@ -22,9 +22,11 @@ public class Sketch01 {
 		
 		Board board = new Board();
 		board.init(boardConf);
+		var controller = new Controller(board);
 		
 		ViewModel viewModel = new ViewModel();
-		View view = new View(viewModel, 1200, 800,new Controller(board));
+		View view = new View(viewModel, 1200, 800,controller);
+		controller.start();
 						
 		viewModel.update(board, 0);			
 		view.render();

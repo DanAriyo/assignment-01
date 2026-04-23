@@ -41,6 +41,9 @@ public class ViewFrame extends JFrame implements KeyListener {
 				System.exit(-1);
 			}
 		});
+		this.addKeyListener(this);
+		this.setFocusable(true);
+		this.setFocusTraversalKeysEnabled(false);
     }
      
     public void render(){

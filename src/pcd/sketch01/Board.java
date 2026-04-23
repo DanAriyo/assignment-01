@@ -72,7 +72,8 @@ public class Board {
     }
 
     public void applyImpulseToPlayerBall(V2d vel){
-        this.playerBall.kick(vel);
+        //this.playerBall.kick(vel);
+        System.out.println("velocita: "+ vel.toString());
     }
 
 
