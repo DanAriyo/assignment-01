@@ -20,6 +20,8 @@ public class ViewFrame extends JFrame implements KeyListener {
     private ViewModel model;
     private RenderSynch sync;
 	private Integer firstKey = null;
+	private javax.swing.Timer timeoutTimer;
+	private static final int INPUT_TIMEOUT = 2000;
 	private final Controller controller;
     
     public ViewFrame(ViewModel model, int w, int h,Controller controller){
@@ -63,7 +65,18 @@ public class ViewFrame extends JFrame implements KeyListener {
 		if (isArrowKey(currentKey)) {
 			if (firstKey == null) {
 				firstKey = currentKey;
+				if (timeoutTimer == null) {
+					timeoutTimer = new javax.swing.Timer(INPUT_TIMEOUT, arg -> {
+						if (firstKey != null) {
+							controller.notifyNewCmd(createComboCommand(firstKey, firstKey));
+							firstKey = null;
+						}
+					});
+					timeoutTimer.setRepeats(false);
+				}
+				timeoutTimer.restart();
 			} else {
+				timeoutTimer.stop();
 				Cmd cmd = createComboCommand(firstKey, currentKey);
 				controller.notifyNewCmd(cmd);
 				firstKey = null;
