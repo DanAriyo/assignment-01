@@ -43,10 +43,17 @@ public class Board {
         balls.removeIf(b -> {
             if (Hole.checkCollision(b, holes.x()) || Hole.checkCollision(b, holes.y())) {
                 b.getLastHitter().ifPresent(this::incrementScore);
+                System.out.println("collided ball" + b + " and hole");
+                this.notifyAll();
                 return true;
             }
             return false;
         });
+
+        if(Hole.checkCollision(playerBall,holes.getX()) || Hole.checkCollision(playerBall,holes.getY())){
+            System.out.println("GAME SHOULD END");
+        }
+
     	   	    	
     }
     
