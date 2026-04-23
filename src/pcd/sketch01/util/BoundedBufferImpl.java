@@ -1,4 +1,4 @@
-package pcd.sketch02.util;
+package pcd.sketch01.util;
 
 import java.util.LinkedList;
 
@@ -41,6 +41,6 @@ public class BoundedBufferImpl<Item> implements BoundedBuffer<Item> {
 	}
 
 	private boolean isEmpty() {
-		return buffer.isEmpty();
+		return buffer.size() == 0;
 	}
 }

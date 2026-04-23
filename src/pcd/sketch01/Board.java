@@ -67,7 +67,9 @@ public class Board {
         scores.computeIfPresent(hitter, (k, v) -> v + 1);
     }
 
-    public synchronized int getScore(Role type) {
+    public int getScore(Role type) {
         return scores.getOrDefault(type, 0);
     }
+
+
 }

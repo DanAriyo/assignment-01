@@ -23,7 +23,7 @@ public class Hole {
         /*if there is collision we need to do 2 things:
         1) update the score if it was thrown either from cpu or player
         2) remove the ball from the list
-        There is a collision if the distance between the two balls is less than the sum of the radii
+        There is a collision if the distance between the two balls is less than the sum of the radius
          */
         return dist < minD && dist > 1e-6;
 
