@@ -1,6 +1,8 @@
 package pcd.sketch01.util;
 
 import java.util.LinkedList;
+import java.util.concurrent.locks.*;
+
 
 /**
  * 
@@ -11,36 +13,62 @@ import java.util.LinkedList;
  */
 public class BoundedBufferImpl<Item> implements BoundedBuffer<Item> {
 
-	private LinkedList<Item> buffer;
-	private int maxSize;
+	private final LinkedList<Item> buffer;
+	private final int maxSize;
+	private final Lock mutex;
+	private final Condition notFull,notEmpty;
 
 	public BoundedBufferImpl(int size) {
-		buffer = new LinkedList<Item>();
-		maxSize = size;
+		this.buffer = new LinkedList<Item>();
+		this.maxSize = size;
+		this.mutex = new ReentrantLock();
+		this.notFull = mutex.newCondition();
+		this.notEmpty = mutex.newCondition();
 	}
 
-	public synchronized void put(Item item) throws InterruptedException {
-		while (isFull()) {
-			wait();
+	public void put(Item item) throws InterruptedException {
+		try{
+			this.mutex.lock();
+			while(isFull()){
+				this.notFull.await();
+			}
+			buffer.addLast(item);
+			this.notEmpty.signalAll();
+		} finally {
+			this.mutex.unlock();
 		}
-		buffer.addLast(item);
-		notifyAll();
 	}
 
 	public synchronized Item get() throws InterruptedException {
-		while (isEmpty()) {
-			wait();
+		try{
+			this.mutex.lock();
+			while (isEmpty()) {
+				this.notEmpty.await();
+			}
+			Item item = buffer.removeFirst();
+			this.notFull.signalAll();
+			return item;
+		} finally {
+			this.mutex.unlock();
 		}
-		Item item = buffer.removeFirst();
-		notifyAll();
-		return item;
+
 	}
 
 	private boolean isFull() {
-		return buffer.size() == maxSize;
+		try{
+			this.mutex.lock();
+			return this.buffer.size() == maxSize;
+		} finally {
+			this.mutex.unlock();
+		}
 	}
 
-	private boolean isEmpty() {
-		return buffer.isEmpty();
+	private boolean isEmpty() throws InterruptedException{
+		try{
+			this.mutex.lock();
+			return this.buffer.isEmpty();
+		} finally {
+			this.mutex.unlock();
+		}
 	}
 }
