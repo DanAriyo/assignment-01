@@ -39,7 +39,7 @@ public class BoundedBufferImpl<Item> implements BoundedBuffer<Item> {
 		}
 	}
 
-	public synchronized Item get() throws InterruptedException {
+	public Item get() throws InterruptedException {
 		try{
 			this.mutex.lock();
 			while (isEmpty()) {
