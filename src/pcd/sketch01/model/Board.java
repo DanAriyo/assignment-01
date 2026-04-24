@@ -33,24 +33,6 @@ public class Board {
         scores.put(Role.BOT, 0);
     }
 
-    private boolean isStriker(Ball ball) {
-        return ball.getRole() == Role.PLAYER || ball.getRole() == Role.BOT;
-    }
-
-    private void updateLastHitter(Ball a, Ball b) {
-
-        if (isStriker(a) && b.getRole() == Role.GENERIC) {
-            b.setLastHitter(a.getRole());
-        }
-        else if (isStriker(b) && a.getRole() == Role.GENERIC) {
-            a.setLastHitter(b.getRole());
-        }
-        else if (a.getRole() == Role.GENERIC && b.getRole() == Role.GENERIC) {
-            a.resetLastHitter();
-            b.resetLastHitter();
-        }
-    }
-
     /**
      *
      * Resolving collision between 2 balls, updating their position and velocity
@@ -198,6 +180,24 @@ public class Board {
             this.playerBall.kick(vel);
         }
         System.out.println("velocita: "+ vel.toString());
+    }
+
+    private boolean isStriker(Ball ball) {
+        return ball.getRole() == Role.PLAYER || ball.getRole() == Role.BOT;
+    }
+
+    private void updateLastHitter(Ball a, Ball b) {
+
+        if (isStriker(a) && b.getRole() == Role.GENERIC) {
+            b.setLastHitter(a.getRole());
+        }
+        else if (isStriker(b) && a.getRole() == Role.GENERIC) {
+            a.setLastHitter(b.getRole());
+        }
+        else if (a.getRole() == Role.GENERIC && b.getRole() == Role.GENERIC) {
+            a.resetLastHitter();
+            b.resetLastHitter();
+        }
     }
 
 
