@@ -200,7 +200,19 @@ public class ViewFrame extends JFrame implements KeyListener {
 	                int radiusX = (int)(pb.radius()*delta);
 	                int radiusY = (int)(pb.radius()*delta);
 	                g2.drawOval(x0 - radiusX,y0 - radiusY,radiusX*2,radiusY*2);
+					g2.drawString("P",x0,y0);
 	    		}
+
+				var b = model.getBotBall();
+				if(b != null){
+					var p2 = b.pos();
+					int x1 = (int)(ox + p2.x()*delta);
+					int y1 = (int)(oy + p2.y()*delta);
+					int radiusX2 = (int)(b.radius()*delta);
+					int radiusY2 = (int)(b.radius()*delta);
+					g2.drawOval(x1 - radiusX2, y1 -radiusY2, radiusX2*2,radiusY2*2);
+					g2.drawString("B", x1, y1);
+				}
     		    
     		    g2.setStroke(new BasicStroke(1));
 	    		g2.drawString("Num small balls: " + model.getBalls().size(), 100, 40);

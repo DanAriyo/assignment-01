@@ -9,6 +9,7 @@ public class Board {
 
     private List<Ball> balls;
     private Ball playerBall;
+    private Ball botBall;
     private Boundary bounds;
     private Pair<Hole,Hole> holes;
     private final Map<Role, Integer> scores = new EnumMap<>(Role.class);
@@ -20,6 +21,7 @@ public class Board {
     	playerBall = conf.getPlayerBall(); 
     	bounds = conf.getBoardBoundary();
         holes = conf.getHoles();
+        botBall = conf.getBotBall();
         scores.put(Role.PLAYER, 0);
         scores.put(Role.BOT, 0);
     }
@@ -27,6 +29,7 @@ public class Board {
     public void updateState(long dt) {
 
     	playerBall.updateState(dt, this);
+        botBall.updateState(dt,this);
     	
     	for (var b: balls) {
     		b.updateState(dt, this);
@@ -39,18 +42,23 @@ public class Board {
         }
     	for (var b: balls) {
     		Ball.resolveCollision(playerBall, b);
+            Ball.resolveCollision(botBall,b);
     	}
         balls.removeIf(b -> {
             if (Hole.checkCollision(b, holes.x()) || Hole.checkCollision(b, holes.y())) {
                 b.getLastHitter().ifPresent(this::incrementScore);
                 System.out.println("collided ball" + b + " and hole");
-                this.notifyAll();
+                this.incrementScore(b.getLastHitter().get());
+                System.out.println("nuovo score:" + this.getScore(b.getLastHitter().get()));
                 return true;
             }
             return false;
         });
 
         if(Hole.checkCollision(playerBall,holes.getX()) || Hole.checkCollision(playerBall,holes.getY())){
+            System.out.println("GAME SHOULD END");
+        }
+        if(Hole.checkCollision(botBall,holes.getX()) || Hole.checkCollision(botBall,holes.getY())){
             System.out.println("GAME SHOULD END");
         }
 
@@ -64,6 +72,8 @@ public class Board {
     public Ball getPlayerBall() {
     	return playerBall;
     }
+
+    public Ball getBotBall() {return botBall;}
     
     public  Boundary getBounds(){
         return bounds;
