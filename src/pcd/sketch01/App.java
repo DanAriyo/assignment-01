@@ -9,7 +9,7 @@ import pcd.sketch01.view.ViewModel;
 
 import java.util.Random;
 
-public class Sketch01 {
+public class App {
 
 	
 	public static void main(String[] argv) {
