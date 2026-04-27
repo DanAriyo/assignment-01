@@ -12,7 +12,6 @@ import javax.swing.*;
 
 public class ViewFrame extends JFrame implements KeyListener {
 
-	// Costanti per il layout e font
 	private static final Font SCORE_FONT = new Font("Arial", Font.BOLD, 72);
 	private static final Font OVERLAY_FONT = new Font("Arial", Font.BOLD, 64);
 	private static final int INPUT_TIMEOUT = 1000;
