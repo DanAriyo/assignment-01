@@ -54,7 +54,6 @@ public class ViewFrame extends JFrame implements KeyListener {
 		}
 	}
 
-	// --- Gestione Input (Logica originale preservata) ---
 	@Override public void keyTyped(KeyEvent e) {}
 	@Override public void keyReleased(KeyEvent e) {}
 
@@ -93,11 +92,39 @@ public class ViewFrame extends JFrame implements KeyListener {
 	}
 
 	private Cmd createComboCommand(int k1, int k2) {
-		// ... (Mantieni la tua logica createComboCommand originale qui) ...
+		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_RIGHT ||
+				k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_UP) {
+			return new MoveUpRightCmd();
+		}
+		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_LEFT ||
+				k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_UP) {
+			return new MoveUpLeftCmd();
+		}
+		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_LEFT ||
+				k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_DOWN) {
+			return new MoveDownLeftCmd();
+		}
+		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_RIGHT ||
+				k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_DOWN) {
+			return new MoveDownRightCmd();
+		}
+		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_DOWN) {
+			return new MoveDownCmd();
+		}
+		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_UP) {
+			return new MoveUpCmd();
+		}
+
+		if (k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_RIGHT) {
+			return new MoveRightCmd();
+		}
+
+		if (k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_LEFT) {
+			return new MoveLeftCmd();
+		}
 		return new DefaultCmd();
 	}
 
-	// --- Inner Class Panel ---
 	public class VisualiserPanel extends JPanel {
 		private final int ox, oy, delta;
 
@@ -114,22 +141,17 @@ public class ViewFrame extends JFrame implements KeyListener {
 			Graphics2D g2 = (Graphics2D) g;
 			setupRenderingHints(g2);
 
-			// Sfondo
 			g2.clearRect(0, 0, getWidth(), getHeight());
 
-			// Assi e Griglia
 			drawGrid(g2);
 
-			// Entità
 			drawHoles(g2);
 			drawSmallBalls(g2);
-			drawMainBall(g2, model.getPlayerBall(), "P", Color.BLUE);
-			drawMainBall(g2, model.getBotBall(), "B", Color.RED);
+			drawMainBall(g2, model.getPlayerBall(), "P", Color.BLACK);
+			drawMainBall(g2, model.getBotBall(), "B", Color.BLACK);
 
-			// HUD (Testi info)
 			drawHUD(g2);
 
-			// Overlay Game Over
 			if (controller.isGameOver()) {
 				drawGameOverOverlay(g2);
 			}
@@ -185,8 +207,8 @@ public class ViewFrame extends JFrame implements KeyListener {
 		private void drawHUD(Graphics2D g2) {
 			g2.setColor(Color.BLACK);
 			g2.setFont(getFont().deriveFont(Font.BOLD, 12f));
-			g2.drawString("Balls: " + model.getBalls().size(), 20, 30);
-			g2.drawString("FPS: " + model.getFramePerSec(), 20, 50);
+			g2.drawString("Num Small Balls: " + model.getBalls().size(), 200, 30);
+			g2.drawString("FPS: " + model.getFramePerSec(), 200, 50);
 
 			g2.setFont(SCORE_FONT);
 			g2.drawString("P: " + model.getPlayerScore(), 50, getHeight() - 50);
