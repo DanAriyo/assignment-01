@@ -20,7 +20,7 @@ public class ViewModel {
 	private Pair<Integer,Integer> scoresPair = null;
 	
 	public ViewModel() {
-		balls = new ArrayList<BallViewInfo>();
+		balls = new ArrayList<>();
 		framePerSec = 0;
 		holes = new Pair<>(new HoleViewInfo(new P2d(0,0),0),new HoleViewInfo(new P2d(0,0),0));
 	}

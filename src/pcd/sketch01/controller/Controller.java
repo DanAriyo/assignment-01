@@ -2,8 +2,11 @@ package pcd.sketch01.controller;
 
 import pcd.sketch01.model.Board;
 import pcd.sketch01.controller.commands.Cmd;
+import pcd.sketch01.model.Role;
 import pcd.sketch01.util.BoundedBuffer;
 import pcd.sketch01.util.BoundedBufferImpl;
+
+import java.util.Optional;
 
 public class Controller extends Thread{
 
@@ -41,4 +44,10 @@ public class Controller extends Thread{
             ex.printStackTrace();
         }
     }
+
+    public boolean isGameOver(){
+        return board.isGameOver();
+    }
+
+    public Optional<Role> getWinner(){return this.board.getWinner();}
 }

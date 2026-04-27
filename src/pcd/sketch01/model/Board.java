@@ -2,6 +2,7 @@ package pcd.sketch01.model;
 
 import pcd.sketch01.model.boardConf.BoardConf;
 import pcd.sketch01.util.Pair;
+import pcd.sketch02.model.CounterObserver;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -19,6 +20,7 @@ public class Board {
     private final Map<Role, Integer> scores = new EnumMap<>(Role.class);
     private final Lock mutex;
     private final CollisionHandler handler;
+    private Referee referee;
 
     public Board(){
         this.mutex = new ReentrantLock();
@@ -26,8 +28,6 @@ public class Board {
     }
     
     public void init(BoardConf conf) {
-        try{
-            this.mutex.lock();
             balls = conf.getSmallBalls();
             playerBall = conf.getPlayerBall();
             bounds = conf.getBoardBoundary();
@@ -35,11 +35,7 @@ public class Board {
             botBall = conf.getBotBall();
             scores.put(Role.PLAYER, 0);
             scores.put(Role.BOT, 0);
-        }finally {
-            this.mutex.unlock();
-        }
-
-
+            this.referee = new Referee();
     }
 
     public void updateState(long dt) {
@@ -73,14 +69,32 @@ public class Board {
             return false;
         });
 
+
+        handler.resolveCollision(playerBall,botBall);
+
         if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
-            System.out.println("GAME SHOULD END");
+            this.referee.setGameOver(this.botBall.getRole());
         }
         if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
-            System.out.println("GAME SHOULD END");
+            this.referee.setGameOver(this.playerBall.getRole());
         }
 
+        if(balls.isEmpty()){
+            this.checkEndGameConditions();
+        }
+    }
 
+    public void checkEndGameConditions() {
+        int playerScore = this.scores.get(Role.PLAYER);
+        int botScore = this.scores.get(Role.BOT);
+
+        if (playerScore > botScore) {
+            this.referee.setGameOver(Role.PLAYER);
+        } else if (botScore > playerScore) {
+            this.referee.setGameOver(Role.BOT);
+        } else {
+            this.referee.setGameOver(Role.GENERIC);
+        }
     }
     
     public List<Ball> getBalls(){
@@ -114,6 +128,14 @@ public class Board {
             this.playerBall.kick(vel);
         }
         System.out.println("velocita: "+ vel.toString());
+    }
+
+    public boolean isGameOver(){
+        return this.referee.isGameOver();
+    }
+
+    public Optional<Role> getWinner(){
+        return this.referee.getWinner();
     }
 
 
