@@ -26,21 +26,22 @@ public class Board {
     }
     
     public void init(BoardConf conf) {
-    	balls = conf.getSmallBalls();    	
-    	playerBall = conf.getPlayerBall(); 
-    	bounds = conf.getBoardBoundary();
-        holes = conf.getHoles();
-        botBall = conf.getBotBall();
-        scores.put(Role.PLAYER, 0);
-        scores.put(Role.BOT, 0);
+        try{
+            this.mutex.lock();
+            balls = conf.getSmallBalls();
+            playerBall = conf.getPlayerBall();
+            bounds = conf.getBoardBoundary();
+            holes = conf.getHoles();
+            botBall = conf.getBotBall();
+            scores.put(Role.PLAYER, 0);
+            scores.put(Role.BOT, 0);
+        }finally {
+            this.mutex.unlock();
+        }
 
 
     }
 
-
-
-
-    
     public void updateState(long dt) {
 
     	playerBall.updateState(dt, this);
@@ -55,10 +56,12 @@ public class Board {
                 handler.resolveCollision(balls.get(i), balls.get(j));
             }
         }
+
     	for (var b: balls) {
             handler.resolveCollision(playerBall, b);
             handler.resolveCollision(botBall,b);
     	}
+
         balls.removeIf(b -> {
             if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
                 b.getLastHitter().ifPresent(this::incrementScore);
