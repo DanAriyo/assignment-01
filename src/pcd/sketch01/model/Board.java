@@ -28,6 +28,8 @@ public class Board {
     }
     
     public void init(BoardConf conf) {
+        try{
+            this.mutex.lock();
             balls = conf.getSmallBalls();
             playerBall = conf.getPlayerBall();
             bounds = conf.getBoardBoundary();
@@ -36,65 +38,80 @@ public class Board {
             scores.put(Role.PLAYER, 0);
             scores.put(Role.BOT, 0);
             this.referee = new Referee();
+        }finally {
+            this.mutex.unlock();
+        }
     }
 
     public void updateState(long dt) {
 
-    	playerBall.updateState(dt, this);
-        botBall.updateState(dt,this);
+        try{
+            this.mutex.lock();
+            playerBall.updateState(dt, this);
+            botBall.updateState(dt,this);
 
-    	for (var b: balls) {
-    		b.updateState(dt, this);
-    	}
-
-    	for (int i = 0; i < balls.size() - 1; i++) {
-            for (int j = i + 1; j < balls.size(); j++) {
-                handler.resolveCollision(balls.get(i), balls.get(j));
+            for (var b: balls) {
+                b.updateState(dt, this);
             }
-        }
 
-    	for (var b: balls) {
-            handler.resolveCollision(playerBall, b);
-            handler.resolveCollision(botBall,b);
-    	}
-
-        balls.removeIf(b -> {
-            if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
-                b.getLastHitter().ifPresent(this::incrementScore);
-                System.out.println("collided ball" + b + " and hole");
-                this.incrementScore(b.getLastHitter().get());
-                System.out.println("nuovo score:" + this.getScore(b.getLastHitter().get()));
-                return true;
+            for (int i = 0; i < balls.size() - 1; i++) {
+                for (int j = i + 1; j < balls.size(); j++) {
+                    handler.resolveCollision(balls.get(i), balls.get(j));
+                }
             }
-            return false;
-        });
+
+            for (var b: balls) {
+                handler.resolveCollision(playerBall, b);
+                handler.resolveCollision(botBall,b);
+            }
+
+            balls.removeIf(b -> {
+                if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
+                    b.getLastHitter().ifPresent(this::incrementScore);
+                    System.out.println("collided ball" + b + " and hole");
+                    this.incrementScore(b.getLastHitter().get());
+                    System.out.println("nuovo score:" + this.getScore(b.getLastHitter().get()));
+                    return true;
+                }
+                return false;
+            });
 
 
-        handler.resolveCollision(playerBall,botBall);
+            handler.resolveCollision(playerBall,botBall);
 
-        if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
-            this.referee.setGameOver(this.botBall.getRole());
+            if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
+                this.referee.setGameOver(this.botBall.getRole());
+            }
+            if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
+                this.referee.setGameOver(this.playerBall.getRole());
+            }
+
+            if(balls.isEmpty()){
+                this.checkEndGameConditions();
+            }
+        } finally{
+            this.mutex.unlock();
         }
-        if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
-            this.referee.setGameOver(this.playerBall.getRole());
-        }
 
-        if(balls.isEmpty()){
-            this.checkEndGameConditions();
-        }
     }
 
     public void checkEndGameConditions() {
-        int playerScore = this.scores.get(Role.PLAYER);
-        int botScore = this.scores.get(Role.BOT);
+        try{
+            this.mutex.lock();
+            int playerScore = this.scores.get(Role.PLAYER);
+            int botScore = this.scores.get(Role.BOT);
 
-        if (playerScore > botScore) {
-            this.referee.setGameOver(Role.PLAYER);
-        } else if (botScore > playerScore) {
-            this.referee.setGameOver(Role.BOT);
-        } else {
-            this.referee.setGameOver(Role.GENERIC);
+            if (playerScore > botScore) {
+                this.referee.setGameOver(Role.PLAYER);
+            } else if (botScore > playerScore) {
+                this.referee.setGameOver(Role.BOT);
+            } else {
+                this.referee.setGameOver(Role.GENERIC);
+            }
+        }finally{
+            this.mutex.unlock();
         }
+
     }
     
     public List<Ball> getBalls(){
@@ -124,10 +141,14 @@ public class Board {
     }
 
     public void applyImpulseToPlayerBall(V2d vel){
-        if(this.playerBall.getVel().abs() < 0.05){
-            this.playerBall.kick(vel);
+        try{
+            this.mutex.lock();
+            if(this.playerBall.getVel().abs() < 0.05){
+                this.playerBall.kick(vel);
+            }
+        }finally {
+            this.mutex.unlock();
         }
-        System.out.println("velocita: "+ vel.toString());
     }
 
     public boolean isGameOver(){

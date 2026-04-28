@@ -3,6 +3,7 @@ package pcd.sketch01;
 import pcd.sketch01.controller.Controller;
 import pcd.sketch01.model.Board;
 import pcd.sketch01.model.V2d;
+import pcd.sketch01.model.boardConf.LargeBoardConf;
 import pcd.sketch01.model.boardConf.MinimalBoardConf;
 import pcd.sketch01.view.View;
 import pcd.sketch01.view.ViewModel;
@@ -12,7 +13,7 @@ import java.util.Random;
 public class App {
 
 	
-	public static void main(String[] argv) {
+	static void main(String[] argv) {
 
 		/* 
 		 * Different board configs to try:
@@ -21,8 +22,8 @@ public class App {
 		 * - massive: 4500 small balls 
 		 */
 		
-		var boardConf = new MinimalBoardConf();
-		//var boardConf = new LargeBoardConf();
+		//var boardConf = new MinimalBoardConf();
+		var boardConf = new LargeBoardConf();
 		// var boardConf = new MassiveBoardConf();
 		
 		Board board = new Board();
@@ -40,7 +41,7 @@ public class App {
 		int nFrames = 0;
 		long t0 = System.currentTimeMillis();
 		long lastUpdateTime = System.currentTimeMillis();
-			
+
 		var ball = board.getBotBall();
 		var rand = new Random(2);
 		var lastKickTime = t0;
