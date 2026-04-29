@@ -115,29 +115,66 @@ public class Board {
     }
     
     public List<Ball> getBalls(){
-    	return balls;
+        try{
+            this.mutex.lock();
+            return balls;
+        }finally{
+            this.mutex.unlock();
+        }
     }
     
     public Ball getPlayerBall() {
-    	return playerBall;
+        try{
+            this.mutex.lock();
+            return playerBall;
+        }finally{
+            this.mutex.unlock();
+        }
     }
 
-    public Ball getBotBall() {return botBall;}
+    public Ball getBotBall() {
+        try{
+            this.mutex.lock();
+            return botBall;
+        }finally{
+            this.mutex.unlock();
+        }
+    }
     
     public  Boundary getBounds(){
-        return bounds;
+        try{
+            this.mutex.lock();
+            return bounds;
+        }finally{
+            this.mutex.unlock();
+        }
     }
 
     public Pair<Hole, Hole> getHoles() {
-        return holes;
+        try{
+            this.mutex.lock();
+            return holes;
+        }finally{
+            this.mutex.unlock();
+        }
     }
 
     public void incrementScore(Role hitter) {
-        scores.computeIfPresent(hitter, (k, v) -> v + 1);
+        try{
+            this.mutex.lock();
+            scores.computeIfPresent(hitter, (k, v) -> v + 1);
+        }finally {
+            this.mutex.unlock();
+        }
     }
 
     public int getScore(Role type) {
-        return scores.getOrDefault(type, 0);
+        try{
+            this.mutex.lock();
+            return scores.getOrDefault(type, 0);
+        }finally {
+            this.mutex.unlock();
+        }
     }
 
     public void applyImpulseToPlayerBall(V2d vel){
@@ -152,11 +189,21 @@ public class Board {
     }
 
     public boolean isGameOver(){
-        return this.referee.isGameOver();
+        try{
+            this.mutex.lock();
+            return this.referee.isGameOver();
+        }finally{
+            this.mutex.unlock();
+        }
     }
 
     public Optional<Role> getWinner(){
-        return this.referee.getWinner();
+        try{
+            this.mutex.lock();
+            return this.referee.getWinner();
+        }finally{
+            this.mutex.unlock();
+        }
     }
 
 
