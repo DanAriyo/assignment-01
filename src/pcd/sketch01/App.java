@@ -4,6 +4,7 @@ import pcd.sketch01.controller.Controller;
 import pcd.sketch01.model.Board;
 import pcd.sketch01.model.V2d;
 import pcd.sketch01.model.boardConf.LargeBoardConf;
+import pcd.sketch01.model.boardConf.MassiveBoardConf;
 import pcd.sketch01.model.boardConf.MinimalBoardConf;
 import pcd.sketch01.view.View;
 import pcd.sketch01.view.ViewModel;
@@ -24,7 +25,7 @@ public class App {
 		
 		//var boardConf = new MinimalBoardConf();
 		var boardConf = new LargeBoardConf();
-		// var boardConf = new MassiveBoardConf();
+		//var boardConf = new MassiveBoardConf();
 		
 		Board board = new Board();
 		board.init(boardConf);
