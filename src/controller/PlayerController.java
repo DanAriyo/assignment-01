@@ -8,13 +8,13 @@ import util.BoundedBufferImpl;
 
 import java.util.Optional;
 
-public class Controller extends Thread{
+public class PlayerController extends Thread{
 
     private BoundedBuffer<Cmd> cmdBuffer;
     private final Board board;
     private static int MAX_SIZE = 1;
 
-    public Controller(Board board){
+    public PlayerController(Board board){
 
         this.board = board;
         cmdBuffer = new BoundedBufferImpl<>(MAX_SIZE);

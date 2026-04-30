@@ -1,17 +1,17 @@
 package view;
 
 
-import controller.Controller;
+import controller.PlayerController;
 
 public class View {
 
 	private ViewFrame frame;
 	private ViewModel viewModel;
-	private Controller controller;
+	private PlayerController playerController;
 
 	
-	public View(ViewModel model, int w, int h, Controller controller) {
-		frame = new ViewFrame(model, w, h,controller);
+	public View(ViewModel model, int w, int h, PlayerController playerController) {
+		frame = new ViewFrame(model, w, h, playerController);
 		frame.setVisible(true);
 		this.viewModel = model;
 	}

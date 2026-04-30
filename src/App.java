@@ -1,6 +1,5 @@
-import controller.Controller;
+import controller.PlayerController;
 import model.Board;
-import model.V2d;
 import model.boardConf.LargeBoardConf;
 import view.View;
 import view.ViewModel;
@@ -21,7 +20,7 @@ void main() {
 
     Board board = new Board();
     board.init(boardConf);
-    var controller = new Controller(board);
+    var controller = new PlayerController(board);
 
     ViewModel viewModel = new ViewModel();
     View view = new View(viewModel, 1200, 800, controller);

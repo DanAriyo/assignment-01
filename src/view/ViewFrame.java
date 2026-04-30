@@ -1,6 +1,6 @@
 package view;
 
-import controller.Controller;
+import controller.PlayerController;
 import controller.commands.*;
 import model.P2d;
 
@@ -20,11 +20,11 @@ public class ViewFrame extends JFrame implements KeyListener {
 	private RenderSynch sync;
 	private Integer firstKey = null;
 	private Timer timeoutTimer;
-	private final Controller controller;
+	private final PlayerController playerController;
 
-	public ViewFrame(ViewModel model, int w, int h, Controller controller){
+	public ViewFrame(ViewModel model, int w, int h, PlayerController playerController){
 		this.model = model;
-		this.controller = controller;
+		this.playerController = playerController;
 		this.sync = new RenderSynch();
 
 		setTitle("Billiard Sketch 03");
@@ -55,7 +55,7 @@ public class ViewFrame extends JFrame implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (controller.isGameOver()) return; // Blocca input se finito
+		if (playerController.isGameOver()) return; // Blocca input se finito
 
 		int currentKey = e.getKeyCode();
 		if (isArrowKey(currentKey)) {
@@ -69,7 +69,7 @@ public class ViewFrame extends JFrame implements KeyListener {
 			if (timeoutTimer == null) {
 				timeoutTimer = new Timer(INPUT_TIMEOUT, arg -> {
 					if (firstKey != null) {
-						controller.notifyNewCmd(createComboCommand(firstKey, firstKey));
+						playerController.notifyNewCmd(createComboCommand(firstKey, firstKey));
 						firstKey = null;
 					}
 				});
@@ -78,7 +78,7 @@ public class ViewFrame extends JFrame implements KeyListener {
 			timeoutTimer.restart();
 		} else {
 			timeoutTimer.stop();
-			controller.notifyNewCmd(createComboCommand(firstKey, currentKey));
+			playerController.notifyNewCmd(createComboCommand(firstKey, currentKey));
 			firstKey = null;
 		}
 	}
@@ -148,7 +148,7 @@ public class ViewFrame extends JFrame implements KeyListener {
 
 			drawHUD(g2);
 
-			if (controller.isGameOver()) {
+			if (playerController.isGameOver()) {
 				drawGameOverOverlay(g2);
 			}
 
@@ -219,7 +219,7 @@ public class ViewFrame extends JFrame implements KeyListener {
 
 			g2.setColor(Color.WHITE);
 			g2.setFont(OVERLAY_FONT);
-			String winner = controller.getWinner().isPresent() ? controller.getWinner().get().toString() : "DRAW";
+			String winner = playerController.getWinner().isPresent() ? playerController.getWinner().get().toString() : "DRAW";
 
 			String text = "GAME OVER";
 			String subText = "WINNER: " + winner;
