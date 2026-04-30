@@ -21,15 +21,16 @@ public class PlayerController extends Thread{
     }
 
     public void run() {
-        System.out.println("Controller thread started.");
+        System.out.println("Player Controller thread started.");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Cmd cmd = cmdBuffer.get();
                 System.out.println("Executing command: " + cmd.getClass().getSimpleName());
                 cmd.execute(board);
+                board.handlePlayerCollision();
 
             } catch (InterruptedException ex) {
-                System.out.println("Controller thread interrupted, shutting down...");
+                System.out.println("Player Controller thread interrupted, shutting down...");
                 break;
             } catch (Exception ex) {
                 ex.printStackTrace();

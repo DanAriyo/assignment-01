@@ -208,6 +208,65 @@ public class Board {
         }
     }
 
+    public void handlePlayerCollision(){
+        try{
+            mutex.lock();
+            for (var b: balls) {
+                if (playerBall.getVel().abs() > 1e-3){
+                    handler.resolveCollision(playerBall, b);
+                }
+            }
+            handler.resolveCollision(playerBall,botBall);
+            if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
+                this.referee.setGameOver(this.botBall.getRole());
+            }
+
+        }finally {
+            mutex.unlock();
+        }
+    }
+
+    public void handleBotCollision(){
+        try{
+            mutex.lock();
+            for (var b: balls) {
+                if(botBall.getVel().abs() > 1e-3){
+                    handler.resolveCollision(botBall,b);
+                }
+            }
+            handler.resolveCollision(playerBall,botBall);
+            if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
+                this.referee.setGameOver(this.playerBall.getRole());
+            }
+        }finally{
+            mutex.unlock();
+        }
+    }
+
+    public void handleBallsCollision(){
+        try{
+            mutex.lock();
+            for (int i = 0; i < balls.size() - 1; i++) {
+                for (int j = i + 1; j < balls.size(); j++) {
+                    handler.resolveCollision(balls.get(i), balls.get(j));
+                }
+            }
+
+            balls.removeIf(b -> {
+                if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
+                    b.getLastHitter().ifPresent(this::incrementScore);
+                    return true;
+                }
+                return false;
+            });
+            if(balls.isEmpty()){
+                this.checkEndGameConditions();
+            }
+        }finally {
+            mutex.unlock();
+        }
+    }
+
 
 
 
