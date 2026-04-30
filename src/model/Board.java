@@ -61,16 +61,17 @@ public class Board {
             }
 
             for (var b: balls) {
-                handler.resolveCollision(playerBall, b);
-                handler.resolveCollision(botBall,b);
+                if (playerBall.getVel().abs() > 1e-3){
+                    handler.resolveCollision(playerBall, b);
+                }
+                if(botBall.getVel().abs() > 1e-3){
+                    handler.resolveCollision(botBall,b);
+                }
             }
 
             balls.removeIf(b -> {
                 if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
                     b.getLastHitter().ifPresent(this::incrementScore);
-                    System.out.println("collided ball" + b + " and hole");
-                    this.incrementScore(b.getLastHitter().get());
-                    System.out.println("nuovo score:" + this.getScore(b.getLastHitter().get()));
                     return true;
                 }
                 return false;
@@ -163,6 +164,7 @@ public class Board {
         try{
             this.mutex.lock();
             scores.computeIfPresent(hitter, (k, v) -> v + 1);
+            System.out.println("hitter:" + hitter);
         }finally {
             this.mutex.unlock();
         }

@@ -45,12 +45,12 @@ void main() {
 
         /* if the player ball is stopped and 5 secs have elapsed, then kick the player ball */
 
-        if (ball.getVel().abs() < 0.05 && System.currentTimeMillis() - lastKickTime > 2000) {
-            var angle = rand.nextDouble() * Math.PI * 0.25;
-            var v = new V2d(Math.cos(angle), Math.sin(angle)).mul(1.5);
-            ball.kick(v);
-            lastKickTime = System.currentTimeMillis();
-        }
+//        if (ball.getVel().abs() < 0.05 && System.currentTimeMillis() - lastKickTime > 2000) {
+//            var angle = rand.nextDouble() * Math.PI * 0.25;
+//            var v = new V2d(Math.cos(angle), Math.sin(angle)).mul(1.5);
+//            ball.kick(v);
+//            lastKickTime = System.currentTimeMillis();
+//        }
 
 
         /* update board state */
