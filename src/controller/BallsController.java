@@ -1,6 +1,5 @@
 package controller;
 
-import controller.commands.Cmd;
 import model.Board;
 
 public class BallsController extends Thread{

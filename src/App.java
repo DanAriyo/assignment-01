@@ -1,3 +1,5 @@
+import controller.BallsController;
+import controller.BotController;
 import controller.PlayerController;
 import model.Board;
 import model.boardConf.LargeBoardConf;
@@ -21,10 +23,14 @@ void main() {
     Board board = new Board();
     board.init(boardConf);
     var controller = new PlayerController(board);
+    var botController = new BotController(board);
+    var ballsController = new BallsController(board);
 
     ViewModel viewModel = new ViewModel();
     View view = new View(viewModel, 1200, 800, controller);
     controller.start();
+    botController.start();
+    ballsController.start();
 
     viewModel.update(board, 0);
     view.render();
@@ -34,23 +40,9 @@ void main() {
     long t0 = System.currentTimeMillis();
     long lastUpdateTime = System.currentTimeMillis();
 
-    var ball = board.getBotBall();
-    var rand = new Random(2);
-    var lastKickTime = t0;
-
     /* main simulation loop */
 
     while (true) {
-
-        /* if the player ball is stopped and 5 secs have elapsed, then kick the player ball */
-
-//        if (ball.getVel().abs() < 0.05 && System.currentTimeMillis() - lastKickTime > 2000) {
-//            var angle = rand.nextDouble() * Math.PI * 0.25;
-//            var v = new V2d(Math.cos(angle), Math.sin(angle)).mul(1.5);
-//            ball.kick(v);
-//            lastKickTime = System.currentTimeMillis();
-//        }
-
 
         /* update board state */
 
