@@ -83,7 +83,7 @@ public class Ball {
             pos = new P2d(pos.x(), bounds.y1() - radius);
             vel = vel.getSwappedY();
         } else if (pos.y() - radius < bounds.y0()){
-            pos = new P2d(pos.x(), bounds.y0() - radius);
+            pos = new P2d(pos.x(), bounds.y0() + radius);
             vel = vel.getSwappedY();
         }
     }

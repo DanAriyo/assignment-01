@@ -1,6 +1,7 @@
 package util;
 
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -54,6 +55,22 @@ public class BoundedBufferImpl<Item> implements BoundedBuffer<Item> {
 			this.mutex.unlock();
 		}
 
+	}
+
+	public Optional<Item> poll() {
+		try {
+			this.mutex.lock();
+			if (buffer.isEmpty()) {
+				return Optional.empty();
+			}
+			Item item = buffer.removeFirst();
+			// Segnaliamo che si è liberato un posto,
+			// nel caso ci fossero thread in attesa nella put()
+			this.notFull.signalAll();
+			return Optional.of(item);
+		} finally {
+			this.mutex.unlock();
+		}
 	}
 
 	private boolean isFull() {

@@ -24,14 +24,12 @@ public class PlayerController extends Thread{
         System.out.println("Player Controller thread started.");
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                Cmd cmd = cmdBuffer.get();
+                // 1. Gestisci eventuali comandi accumulati (senza bloccare il loop!)
+                Optional<Cmd> cmd = cmdBuffer.poll(); // Usa poll invece di get se vuoi un loop fluido
                 System.out.println("Executing command: " + cmd.getClass().getSimpleName());
-                cmd.execute(board);
+                cmd.ifPresent(c -> c.execute(board));
                 board.handlePlayerCollision();
 
-            } catch (InterruptedException ex) {
-                System.out.println("Player Controller thread interrupted, shutting down...");
-                break;
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
