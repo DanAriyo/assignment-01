@@ -24,9 +24,7 @@ public class PlayerController extends Thread{
         System.out.println("Player Controller thread started.");
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                // 1. Gestisci eventuali comandi accumulati (senza bloccare il loop!)
-                Optional<Cmd> cmd = cmdBuffer.poll(); // Usa poll invece di get se vuoi un loop fluido
-                System.out.println("Executing command: " + cmd.getClass().getSimpleName());
+                Optional<Cmd> cmd = cmdBuffer.poll();
                 cmd.ifPresent(c -> c.execute(board));
                 board.handlePlayerCollision();
 

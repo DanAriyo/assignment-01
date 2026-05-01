@@ -121,6 +121,13 @@ public class ViewFrame extends JFrame implements KeyListener {
 		return new DefaultCmd();
 	}
 
+	private void setupRenderingHints(Graphics2D g2) {
+		// Disattiviamo l'anti-aliasing per le forme geometriche (palline)
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		// Manteniamolo attivo solo per il testo (HUD e Game Over)
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+	}
+
 	public class VisualiserPanel extends JPanel {
 		private final int ox, oy, delta;
 
@@ -155,11 +162,6 @@ public class ViewFrame extends JFrame implements KeyListener {
 			sync.notifyFrameRendered();
 		}
 
-		private void setupRenderingHints(Graphics2D g2) {
-			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		}
-
 		private void drawGrid(Graphics2D g2) {
 			g2.setColor(Color.LIGHT_GRAY);
 			g2.drawLine(ox, 0, ox, oy * 2);
@@ -175,8 +177,13 @@ public class ViewFrame extends JFrame implements KeyListener {
 
 		private void drawSmallBalls(Graphics2D g2) {
 			g2.setColor(Color.DARK_GRAY);
+			// Usiamo uno spessore fisso di 1 pixel senza calcoli complessi
 			g2.setStroke(new BasicStroke(1));
-			for (var b : model.getBalls()) {
+
+			// Otteniamo la lista una sola volta per evitare chiamate ripetute al modello
+			var balls = model.getBalls();
+			for (var b : balls) {
+				// Chiamata diretta a renderCircle che ora è più veloce senza AA
 				renderCircle(g2, b.pos(), b.radius(), false);
 			}
 		}
@@ -193,11 +200,17 @@ public class ViewFrame extends JFrame implements KeyListener {
 		}
 
 		private void renderCircle(Graphics2D g2, P2d pos, double radius, boolean fill) {
-			int x = (int)(ox + pos.x() * delta);
-			int y = (int)(oy - pos.y() * delta);
+			// Calcoliamo i valori una sola volta
 			int r = (int)(radius * delta);
-			if (fill) g2.fillOval(x - r, y - r, r * 2, r * 2);
-			else g2.drawOval(x - r, y - r, r * 2, r * 2);
+			int x = (int)(ox + pos.x() * delta) - r;
+			int y = (int)(oy - pos.y() * delta) - r;
+			int diameter = r * 2;
+
+			if (fill) {
+				g2.fillOval(x, y, diameter, diameter);
+			} else {
+				g2.drawOval(x, y, diameter, diameter);
+			}
 		}
 
 		private void drawHUD(Graphics2D g2) {

@@ -3,6 +3,7 @@ import controller.BotController;
 import controller.PlayerController;
 import model.Board;
 import model.boardConf.LargeBoardConf;
+import model.boardConf.MassiveBoardConf;
 import view.View;
 import view.ViewModel;
 
@@ -17,8 +18,8 @@ void main() {
      */
 
     //var boardConf = new MinimalBoardConf();
-    var boardConf = new LargeBoardConf();
-    //var boardConf = new MassiveBoardConf();
+    //var boardConf = new LargeBoardConf();
+    var boardConf = new MassiveBoardConf();
 
     Board board = new Board();
     board.init(boardConf);

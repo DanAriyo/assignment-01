@@ -3,10 +3,7 @@ package model;
 import model.boardConf.BoardConf;
 import util.Pair;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -103,7 +100,7 @@ public class Board {
     public List<Ball> getBalls(){
         try{
             this.mutex.lock();
-            return balls;
+            return List.copyOf(this.balls);
         }finally{
             this.mutex.unlock();
         }
@@ -194,18 +191,20 @@ public class Board {
     }
 
     public void handlePlayerCollision(){
-        mutex.lock();
+        List<Ball> playerSnap = List.of();
         try {
+            mutex.lock();
             while (!canStart) {
                 startCollisions.await(); // Aspetta che le posizioni siano aggiornate
             }
+            playerSnap = new ArrayList<>(this.balls);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             mutex.unlock();
         }
 
-        for (var b: balls) {
+        for (var b: playerSnap) {
             if (playerBall.getVel().abs() > 1e-3){
                 handler.resolveCollision(playerBall, b);
             }
@@ -215,8 +214,8 @@ public class Board {
             this.referee.setGameOver(this.botBall.getRole());
         }
 
-        mutex.lock();
         try {
+            mutex.lock();
             finishedCount++;
             if (finishedCount == 3) {
                 collisionsDone.signal(); // L'ultimo thread sveglia il Main
@@ -227,18 +226,20 @@ public class Board {
     }
 
     public void handleBotCollision(){
-        mutex.lock();
+        List<Ball> botSnap = List.of();
         try {
+            mutex.lock();
             while (!canStart) {
                 startCollisions.await(); // Aspetta che le posizioni siano aggiornate
             }
+            botSnap = new ArrayList<>(balls);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             mutex.unlock();
         }
 
-        for (var b: balls) {
+        for (var b: botSnap) {
             if(botBall.getVel().abs() > 1e-3){
                 handler.resolveCollision(botBall,b);
             }
@@ -247,8 +248,8 @@ public class Board {
         if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
             this.referee.setGameOver(this.playerBall.getRole());
         }
-        mutex.lock();
         try {
+            mutex.lock();
             finishedCount++;
             if (finishedCount == 3) {
                 collisionsDone.signal(); // L'ultimo thread sveglia il Main
@@ -260,37 +261,42 @@ public class Board {
     }
 
     public void handleBallsCollision(){
-
-        mutex.lock();
+        List<Ball> snap = List.of();
         try {
+            mutex.lock();
             while (!canStart) {
                 startCollisions.await(); // Aspetta che le posizioni siano aggiornate
             }
+            snap = new ArrayList<>(this.balls);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             mutex.unlock();
         }
 
-        for (int i = 0; i < balls.size() - 1; i++) {
-            for (int j = i + 1; j < balls.size(); j++) {
-                handler.resolveCollision(balls.get(i), balls.get(j));
+        for (int i = 0; i < snap.size() - 1; i++) {
+            for (int j = i + 1; j < snap.size(); j++) {
+                handler.resolveCollision(snap.get(i), snap.get(j));
             }
         }
 
-        balls.removeIf(b -> {
-            if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
-                b.getLastHitter().ifPresent(this::incrementScore);
-                return true;
+        try{
+            mutex.lock();
+            balls.removeIf(b -> {
+                if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
+                    b.getLastHitter().ifPresent(this::incrementScore);
+                    return true;
+                }
+                return false;
+            });
+            if(balls.isEmpty()){
+                this.checkEndGameConditions();
             }
-            return false;
-        });
-        if(balls.isEmpty()){
-            this.checkEndGameConditions();
+        }finally {
+            mutex.unlock();
         }
-
-        mutex.lock();
         try {
+            mutex.lock();
             finishedCount++;
             if (finishedCount == 3) {
                 collisionsDone.signal(); // L'ultimo thread sveglia il Main

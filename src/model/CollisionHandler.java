@@ -102,10 +102,7 @@ public class CollisionHandler {
         else if (isStriker(b) && a.getRole() == Role.GENERIC) {
             a.setLastHitter(b.getRole());
         }
-        else if (a.getRole() == Role.GENERIC && b.getRole() == Role.GENERIC) {
-            a.resetLastHitter();
-            b.resetLastHitter();
-        }
+
     }
 
 
