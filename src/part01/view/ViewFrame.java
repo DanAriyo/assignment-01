@@ -1,7 +1,7 @@
 package part01.view;
 
 import part01.controller.PlayerController;
-import part01.controller.commands.*;
+import util.commands.*;
 import part01.model.P2d;
 
 import javax.swing.*;

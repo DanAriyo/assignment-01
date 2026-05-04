@@ -1,4 +1,4 @@
-package part01.controller.commands;
+package util.commands;
 
 import part01.model.Board;
 import part01.model.V2d;

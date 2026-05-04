@@ -1,6 +1,6 @@
 package part01.controller;
 
-import part01.controller.commands.Cmd;
+import util.commands.Cmd;
 import part01.model.Board;
 import part01.model.Role;
 import util.BoundedBuffer;
