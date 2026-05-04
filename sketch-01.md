@@ -11,8 +11,8 @@ This sketch (`pcd.sketch01`) shows an example of a board, with a number of small
 At each cycle, the main loop:
 - Checks if it is time to kick the player ball
 - Computes the next board state, depending on how much time is elapsed
-- Updates the view model with the updated board state
-- Renders a new frame, updating synchronously the view with the updated view model
+- Updates the part01.view part01.model with the updated board state
+- Renders a new frame, updating synchronously the part01.view with the updated part01.view part01.model
 
 The board state involves a sequence of steps:
 - Updating the state of the player ball and of each small balls
@@ -32,10 +32,10 @@ The program implements simple elastic collisions between bodies with a certain m
 
 ### About Rendering
 
-Rendering is requested by the thread running the main loop when calling `view.render`.  
+Rendering is requested by the thread running the main loop when calling `part01.view.render`.  
 - Painting is performed by the EDT (i.e. the Swing thread), asynchronously, when a `repaint` Swing method is requested (on a frame or a panel or any Swing component) 
-- If painting is done while the view model is udpated, we can have races
-- To avoid this, `view.render` is implemented with a synchronous behaviour, so that it returns only when the rendering has been completed, before computing the next state and view model 
+- If painting is done while the part01.view part01.model is udpated, we can have races
+- To avoid this, `part01.view.render` is implemented with a synchronous behaviour, so that it returns only when the rendering has been completed, before computing the next state and part01.view part01.model 
   - the solution adopts a monitor (`RenderSynch`), used to synchronize the EDT with the thread requesting repainting
   - more efficient approaches can be adopted, such as [double buffering](https://en.wikipedia.org/wiki/Multiple_buffering)
 

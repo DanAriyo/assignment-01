@@ -37,13 +37,13 @@ The concurrent programs should be designed according the principles studied duri
 - For every other aspect not specified, students are free to choose the best approach for them.
 
 Beside the source code, the assignment should contain a brief report, including:
-- A brief analsysis of the problem, focusing in particular those aspects that are relevant from a concurrent point of view
+- A brief analsysis of the problem, focusing in particular those aspects that are relevant from a concurrent point of part01.view
 - A brief description of the adopted design, the architecture (structure) and the behaviour
   - for the behaviour, one or multiple Petri Nets can be used, choosing the proper level of abstraction
 - Performance tests to check and discuss: 
   - how much the concurrent version is better than a sequential one
   - how much the program is effective in exploiting available cores
-- Verification of the program (or some parts of it), using model-checking and JPF in particular 
+- Verification of the program (or some parts of it), using part01.model-checking and JPF in particular 
 
 The `assignment-01`folder in the repo includes two sketches that could be used as a starting point
 - [`sketch01`](./sketch-01.md) is an example of main loop using a sequential approach to implement the dynamics of the bouncing balls, as requested in the game
