@@ -1,19 +1,21 @@
 package part02.model;
 
 import common.*;
-import util.Boundary;
-import util.Pair;
-import util.Role;
-import util.V2d;
+import util.*;
 import util.boardConf.BoardConf;
+import util.commands.Cmd;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Board2 implements Board {
 
+    private static final int MAX_SIZE = 1;
     private List<Ball> balls;
     private Ball playerBall;
     private Ball botBall;
@@ -23,16 +25,20 @@ public class Board2 implements Board {
     private final Lock mutex;
     private final CollisionHandler handler;
     private Referee referee;
-    private final Condition startCollisions;
-    private final Condition collisionsDone;
-    private int finishedCount = 0;
-    private boolean canStart = false;
+    private final BoundedBuffer<Cmd> cmdBuffer;
+    private final Random rand = new Random(2);
+    private final ExecutorService executor;
+    private long lastBotKickTime = 0;
+
 
     public Board2(){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
-        startCollisions = mutex.newCondition();
-        collisionsDone = mutex.newCondition();
+        cmdBuffer = new BoundedBufferImpl<>(MAX_SIZE);
+        executor = Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors()
+        );
+
     }
     
     public void init(BoardConf conf) {
@@ -60,21 +66,30 @@ public class Board2 implements Board {
             for (var b: balls) {
                 b.updateState(dt, this);
             }
-
-            canStart = true;
-            finishedCount = 0;
-            startCollisions.signalAll();
-
-            while (finishedCount < 3) {
-                collisionsDone.await();
-            }
-            canStart = false;
-
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         } finally{
             this.mutex.unlock();
+        }
+
+        List<Callable<Void>> tasks = new ArrayList<>();
+
+        tasks.add(() -> {
+            handleInput();
+            return null;
+        });
+
+        tasks.add(() -> {
+            handleBotInput();
+            return null;
+        });
+
+        tasks.add(() -> { handlePlayerCollision(); return null; });
+        tasks.add(() -> { handleBotCollision(); return null; });
+        tasks.add(() -> { handleBallsCollision(); return null; });
+
+        try{
+            executor.invokeAll(tasks);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -194,12 +209,7 @@ public class Board2 implements Board {
         List<Ball> playerSnap = List.of();
         try {
             mutex.lock();
-            while (!canStart) {
-                startCollisions.await();
-            }
             playerSnap = new ArrayList<>(this.balls);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } finally {
             mutex.unlock();
         }
@@ -213,28 +223,13 @@ public class Board2 implements Board {
         if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
             this.referee.setGameOver(this.botBall.getRole());
         }
-
-        try {
-            mutex.lock();
-            finishedCount++;
-            if (finishedCount == 3) {
-                collisionsDone.signal();
-            }
-        } finally {
-            mutex.unlock();
-        }
     }
 
     public void handleBotCollision(){
         List<Ball> botSnap = List.of();
         try {
             mutex.lock();
-            while (!canStart) {
-                startCollisions.await();
-            }
             botSnap = new ArrayList<>(balls);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } finally {
             mutex.unlock();
         }
@@ -248,28 +243,13 @@ public class Board2 implements Board {
         if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
             this.referee.setGameOver(this.playerBall.getRole());
         }
-        try {
-            mutex.lock();
-            finishedCount++;
-            if (finishedCount == 3) {
-                collisionsDone.signal();
-            }
-        } finally {
-            mutex.unlock();
-        }
-
     }
 
     public void handleBallsCollision(){
         List<Ball> snap = List.of();
         try {
             mutex.lock();
-            while (!canStart) {
-                startCollisions.await();
-            }
             snap = new ArrayList<>(this.balls);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } finally {
             mutex.unlock();
         }
@@ -295,14 +275,20 @@ public class Board2 implements Board {
         }finally {
             mutex.unlock();
         }
-        try {
-            mutex.lock();
-            finishedCount++;
-            if (finishedCount == 3) {
-                collisionsDone.signal();
-            }
-        } finally {
-            mutex.unlock();
+    }
+
+    public void handleInput(){
+        Optional<Cmd> cmd = cmdBuffer.poll();
+        cmd.ifPresent(c -> c.execute(this));
+    }
+
+    public void handleBotInput() {
+        long currentTime = System.currentTimeMillis();
+        if (botBall.getVel().abs() < 0.05 && (currentTime - lastBotKickTime > 2000)) {
+            var angle = rand.nextDouble() * Math.PI * 0.25;
+            var v = new V2d(Math.cos(angle), Math.sin(angle)).mul(1.5);
+            botBall.kick(v);
+            lastBotKickTime = currentTime;
         }
     }
 

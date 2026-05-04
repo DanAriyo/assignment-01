@@ -1,6 +1,6 @@
 package part02.view;
 
-import part01.model.Board1;
+import part02.model.Board2;
 import util.P2d;
 import util.Pair;
 import util.Role;
@@ -29,21 +29,21 @@ public class ViewModel {
 		mutex = new ReentrantLock();
 	}
 	
-	public void update(Board1 board1, int framePerSec) {
+	public void update(Board2 board2, int framePerSec) {
 		try{
 			this.mutex.lock();
-			this.scoresPair = new Pair<>(board1.getScore(Role.PLAYER), board1.getScore(Role.BOT));
-			var holesPair = board1.getHoles();
+			this.scoresPair = new Pair<>(board2.getScore(Role.PLAYER), board2.getScore(Role.BOT));
+			var holesPair = board2.getHoles();
 			holes = new Pair<>(new HoleViewInfo(holesPair.x().getPos(),holesPair.x().getRadius()),
 					new HoleViewInfo(holesPair.y().getPos(),holesPair.y().getRadius()));
 			balls.clear();
-			for (var b: board1.getBalls()) {
+			for (var b: board2.getBalls()) {
 				balls.add(new BallViewInfo(b.getPos(), b.getRadius()));
 			}
 			this.framePerSec = framePerSec;
-			var p = board1.getPlayerBall();
+			var p = board2.getPlayerBall();
 			player = new BallViewInfo(p.getPos(), p.getRadius());
-			var b = board1.getBotBall();
+			var b = board2.getBotBall();
 			bot = new BallViewInfo(b.getPos(),b.getRadius());
 		}finally{
 			this.mutex.unlock();

@@ -1,10 +1,10 @@
 package util.commands;
 
 
-import part01.model.Board1;
+import common.Board;
 
 public interface Cmd {
 
-	void execute(Board1 board1);
+	void execute(Board board);
 	
 }

@@ -1,11 +1,12 @@
 package part02;
 
-import part01.controller.BallsController;
-import part01.controller.BotController;
-import part01.controller.PlayerController;
-import part01.model.Board1;
-import part01.view.View;
-import part01.view.ViewModel;
+
+import part02.controller.PlayerController;
+import part02.model.Board2;
+import part02.view.View;
+import part02.view.ViewModel;
+import part02.model.Board2;
+import util.boardConf.LargeBoardConf;
 import util.boardConf.MassiveBoardConf;
 
 
@@ -21,22 +22,17 @@ public class App2 {
          */
 
         //var boardConf = new MinimalBoardConf();
-        //var boardConf = new LargeBoardConf();
-        var boardConf = new MassiveBoardConf();
+        var boardConf = new LargeBoardConf();
+        //var boardConf = new MassiveBoardConf();
 
-        Board1 board1 = new Board1();
-        board1.init(boardConf);
-        var controller = new PlayerController(board1);
-        var botController = new BotController(board1);
-        var ballsController = new BallsController(board1);
+        Board2 board2 = new Board2();
+        board2.init(boardConf);
+        var controller = new PlayerController(board2);
 
         ViewModel viewModel = new ViewModel();
         View view = new View(viewModel, 1200, 800, controller);
-        controller.start();
-        botController.start();
-        ballsController.start();
 
-        viewModel.update(board1, 0);
+        viewModel.update(board2, 0);
         view.render();
         waitAbit();
 
@@ -52,7 +48,7 @@ public class App2 {
 
             long elapsed = System.currentTimeMillis() - lastUpdateTime;
             lastUpdateTime = System.currentTimeMillis();
-            board1.updateState(elapsed);
+            board2.updateState(elapsed);
 
             /* render */
 
@@ -63,7 +59,7 @@ public class App2 {
                 framePerSec = (int) (nFrames * 1000 / dt);
             }
 
-            viewModel.update(board1, framePerSec);
+            viewModel.update(board2, framePerSec);
             view.render();
 
         }

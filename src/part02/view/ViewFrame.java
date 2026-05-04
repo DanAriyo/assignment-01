@@ -1,6 +1,6 @@
 package part02.view;
 
-import part01.controller.PlayerController;
+import part02.controller.PlayerController;
 import util.P2d;
 import util.commands.*;
 

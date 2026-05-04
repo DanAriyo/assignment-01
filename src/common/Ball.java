@@ -58,7 +58,7 @@ public class Ball {
                 vel = new V2d(0,0);
             }
             pos = pos.sum(vel.mul(dt_scaled));
-            applyBoundaryConstraints((Board1) ctx);
+            applyBoundaryConstraints(ctx);
         } finally {
             mutex.unlock();
         }
@@ -73,7 +73,7 @@ public class Ball {
         }
     }
 
-    private void applyBoundaryConstraints(Board1 ctx){
+    private void applyBoundaryConstraints(Board ctx){
         Boundary bounds = ctx.getBounds();
         if (pos.x() + radius > bounds.x1()){
             pos = new P2d(bounds.x1() - radius, pos.y());

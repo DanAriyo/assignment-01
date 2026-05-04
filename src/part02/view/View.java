@@ -1,13 +1,12 @@
 package part02.view;
 
 
-import part01.controller.PlayerController;
+import part02.controller.PlayerController;
 
 public class View {
 
 	private ViewFrame frame;
 	private ViewModel viewModel;
-	private PlayerController playerController;
 
 	
 	public View(ViewModel model, int w, int h, PlayerController playerController) {
