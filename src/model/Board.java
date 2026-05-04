@@ -57,17 +57,15 @@ public class Board {
             for (var b: balls) {
                 b.updateState(dt, this);
             }
-            // FASE 2: Avvio dei 3 Controller
+
             canStart = true;
             finishedCount = 0;
-            startCollisions.signalAll(); // Sveglia Player, Bot e Balls Controller
+            startCollisions.signalAll();
 
-            // FASE 3: Attesa sincronizzata
-            // Il Main thread dorme mentre i 3 Controller lavorano in parallelo
             while (finishedCount < 3) {
                 collisionsDone.await();
             }
-            canStart = false; // Reset per il prossimo frame
+            canStart = false;
 
 
         } catch (InterruptedException e) {
@@ -146,7 +144,6 @@ public class Board {
         try{
             this.mutex.lock();
             scores.computeIfPresent(hitter, (k, v) -> v + 1);
-            System.out.println("hitter:" + hitter);
         }finally {
             this.mutex.unlock();
         }
@@ -195,7 +192,7 @@ public class Board {
         try {
             mutex.lock();
             while (!canStart) {
-                startCollisions.await(); // Aspetta che le posizioni siano aggiornate
+                startCollisions.await();
             }
             playerSnap = new ArrayList<>(this.balls);
         } catch (InterruptedException e) {
@@ -218,7 +215,7 @@ public class Board {
             mutex.lock();
             finishedCount++;
             if (finishedCount == 3) {
-                collisionsDone.signal(); // L'ultimo thread sveglia il Main
+                collisionsDone.signal();
             }
         } finally {
             mutex.unlock();
@@ -230,7 +227,7 @@ public class Board {
         try {
             mutex.lock();
             while (!canStart) {
-                startCollisions.await(); // Aspetta che le posizioni siano aggiornate
+                startCollisions.await();
             }
             botSnap = new ArrayList<>(balls);
         } catch (InterruptedException e) {
@@ -252,7 +249,7 @@ public class Board {
             mutex.lock();
             finishedCount++;
             if (finishedCount == 3) {
-                collisionsDone.signal(); // L'ultimo thread sveglia il Main
+                collisionsDone.signal();
             }
         } finally {
             mutex.unlock();
@@ -265,7 +262,7 @@ public class Board {
         try {
             mutex.lock();
             while (!canStart) {
-                startCollisions.await(); // Aspetta che le posizioni siano aggiornate
+                startCollisions.await();
             }
             snap = new ArrayList<>(this.balls);
         } catch (InterruptedException e) {
@@ -299,7 +296,7 @@ public class Board {
             mutex.lock();
             finishedCount++;
             if (finishedCount == 3) {
-                collisionsDone.signal(); // L'ultimo thread sveglia il Main
+                collisionsDone.signal();
             }
         } finally {
             mutex.unlock();

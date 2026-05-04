@@ -8,67 +8,71 @@ import view.View;
 import view.ViewModel;
 
 
-void main() {
+public class App{
 
-    /*
-     * Different board configs to try:
-     * - minimal: 2 small balls
-     * - large: 400 small balls
-     * - massive: 4500 small balls
-     */
+    public static void main(String[] args) {
 
-    //var boardConf = new MinimalBoardConf();
-    //var boardConf = new LargeBoardConf();
-    var boardConf = new MassiveBoardConf();
+        /*
+         * Different board configs to try:
+         * - minimal: 2 small balls
+         * - large: 400 small balls
+         * - massive: 4500 small balls
+         */
 
-    Board board = new Board();
-    board.init(boardConf);
-    var controller = new PlayerController(board);
-    var botController = new BotController(board);
-    var ballsController = new BallsController(board);
+        //var boardConf = new MinimalBoardConf();
+        var boardConf = new LargeBoardConf();
+        //var boardConf = new MassiveBoardConf();
 
-    ViewModel viewModel = new ViewModel();
-    View view = new View(viewModel, 1200, 800, controller);
-    controller.start();
-    botController.start();
-    ballsController.start();
+        Board board = new Board();
+        board.init(boardConf);
+        var controller = new PlayerController(board);
+        var botController = new BotController(board);
+        var ballsController = new BallsController(board);
 
-    viewModel.update(board, 0);
-    view.render();
-    waitAbit();
+        ViewModel viewModel = new ViewModel();
+        View view = new View(viewModel, 1200, 800, controller);
+        controller.start();
+        botController.start();
+        ballsController.start();
 
-    int nFrames = 0;
-    long t0 = System.currentTimeMillis();
-    long lastUpdateTime = System.currentTimeMillis();
-
-    /* main simulation loop */
-
-    while (true) {
-
-        /* update board state */
-
-        long elapsed = System.currentTimeMillis() - lastUpdateTime;
-        lastUpdateTime = System.currentTimeMillis();
-        board.updateState(elapsed);
-
-        /* render */
-
-        nFrames++;
-        int framePerSec = 0;
-        long dt = (System.currentTimeMillis() - t0);
-        if (dt > 0) {
-            framePerSec = (int) (nFrames * 1000 / dt);
-        }
-
-        viewModel.update(board, framePerSec);
+        viewModel.update(board, 0);
         view.render();
+        waitAbit();
 
-    }
-}
+        int nFrames = 0;
+        long t0 = System.currentTimeMillis();
+        long lastUpdateTime = System.currentTimeMillis();
 
-private static void waitAbit() {
-    try {
-        Thread.sleep(2000);
-    } catch (Exception ex) {
+        /* main simulation loop */
+
+        while (true) {
+
+            /* update board state */
+
+            long elapsed = System.currentTimeMillis() - lastUpdateTime;
+            lastUpdateTime = System.currentTimeMillis();
+            board.updateState(elapsed);
+
+            /* render */
+
+            nFrames++;
+            int framePerSec = 0;
+            long dt = (System.currentTimeMillis() - t0);
+            if (dt > 0) {
+                framePerSec = (int) (nFrames * 1000 / dt);
+            }
+
+            viewModel.update(board, framePerSec);
+            view.render();
+
+        }
     }
+
+    private static void waitAbit() {
+        try {
+            Thread.sleep(2000);
+        } catch (Exception ex) {
+        }
+    }
+
 }
