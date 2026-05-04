@@ -1,9 +1,6 @@
 package part01.model;
 
-import common.Ball;
-import common.CollisionHandler;
-import common.Hole;
-import common.Referee;
+import common.*;
 import util.Boundary;
 import util.Role;
 import util.V2d;
@@ -15,7 +12,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Board {
+public class Board1 implements Board {
 
     private List<Ball> balls;
     private Ball playerBall;
@@ -31,7 +28,7 @@ public class Board {
     private int finishedCount = 0;
     private boolean canStart = false;
 
-    public Board(){
+    public Board1(){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
         startCollisions = mutex.newCondition();

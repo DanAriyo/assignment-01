@@ -1,4 +1,4 @@
-package part01.controller;
+package part02.controller;
 
 import part01.model.Board1;
 import util.V2d;

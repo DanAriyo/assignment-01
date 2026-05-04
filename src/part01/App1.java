@@ -3,13 +3,14 @@ package part01;
 import part01.controller.BallsController;
 import part01.controller.BotController;
 import part01.controller.PlayerController;
-import part01.model.Board;
+import part01.model.Board1;
+import util.boardConf.LargeBoardConf;
 import util.boardConf.MassiveBoardConf;
 import part01.view.View;
 import part01.view.ViewModel;
 
 
-public class App{
+public class App1 {
 
     public static void main(String[] args) {
 
@@ -21,14 +22,14 @@ public class App{
          */
 
         //var boardConf = new MinimalBoardConf();
-        //var boardConf = new LargeBoardConf();
-        var boardConf = new MassiveBoardConf();
+        var boardConf = new LargeBoardConf();
+        //var boardConf = new MassiveBoardConf();
 
-        Board board = new Board();
-        board.init(boardConf);
-        var controller = new PlayerController(board);
-        var botController = new BotController(board);
-        var ballsController = new BallsController(board);
+        Board1 board1 = new Board1();
+        board1.init(boardConf);
+        var controller = new PlayerController(board1);
+        var botController = new BotController(board1);
+        var ballsController = new BallsController(board1);
 
         ViewModel viewModel = new ViewModel();
         View view = new View(viewModel, 1200, 800, controller);
@@ -36,7 +37,7 @@ public class App{
         botController.start();
         ballsController.start();
 
-        viewModel.update(board, 0);
+        viewModel.update(board1, 0);
         view.render();
         waitAbit();
 
@@ -52,7 +53,7 @@ public class App{
 
             long elapsed = System.currentTimeMillis() - lastUpdateTime;
             lastUpdateTime = System.currentTimeMillis();
-            board.updateState(elapsed);
+            board1.updateState(elapsed);
 
             /* render */
 
@@ -63,7 +64,7 @@ public class App{
                 framePerSec = (int) (nFrames * 1000 / dt);
             }
 
-            viewModel.update(board, framePerSec);
+            viewModel.update(board1, framePerSec);
             view.render();
 
         }

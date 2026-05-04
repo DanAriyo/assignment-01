@@ -8,16 +8,16 @@ The assignment is about designing and developing a game called `Poool`.
 
 ### Game Description 
 
-The game consists in a bidimensional board with a number of small balls and two bigger balls, representing a human player ball and a bot (i.e. computer controlled) ball.  
+The game consists in a bidimensional board1 with a number of small balls and two bigger balls, representing a human player ball and a bot (i.e. computer controlled) ball.  
 
-<img src="board.png">
+<img src="board1.png">
 
-The number of small balls can be high (thousands). All balls can move and bounce,  against the border or each other. We consider elastic collisions and friction force, so that a moving ball stops after a while.  At the top of the board, in the corners, there are two circles representing holes. The objective of the game for the players (human and bot) is to kick the small balls in the holes, by throwing their own balls in a sequence of throws. 
+The number of small balls can be high (thousands). All balls can move and bounce,  against the border or each other. We consider elastic collisions and friction force, so that a moving ball stops after a while.  At the top of the board1, in the corners, there are two circles representing holes. The objective of the game for the players (human and bot) is to kick the small balls in the holes, by throwing their own balls in a sequence of throws. 
 
 Details:
 - When a player puts a small ball in a hole, his/her score is incremented by one
 - If a small ball kicks another small balls in a hole, scores are not changed
-- The game ends when there are no more balls in the board and the winner is the player with the biggest score 
+- The game ends when there are no more balls in the board1 and the winner is the player with the biggest score 
 - The game ends also if/when the ball of a player goes in a hole. In that case, the winner is the other player, in spite of the score.
 - To kick her/his ball, the human player can press keys - UP, DOWN, LEFT, RIGHT - to instantaneously update the velocity (simulating an impulse)
   - for instance, by pressing UP the velocity vector can be updated by adding the vector (0,1)

@@ -1,6 +1,6 @@
 package common;
 
-import part01.model.Board;
+import part01.model.Board1;
 import util.Boundary;
 import util.P2d;
 import util.Role;
@@ -58,7 +58,7 @@ public class Ball {
                 vel = new V2d(0,0);
             }
             pos = pos.sum(vel.mul(dt_scaled));
-            applyBoundaryConstraints(ctx);
+            applyBoundaryConstraints((Board1) ctx);
         } finally {
             mutex.unlock();
         }
@@ -73,8 +73,7 @@ public class Ball {
         }
     }
 
-    private void applyBoundaryConstraints(Board ctx){
-        // Chiamato internamente da updateState mentre il lock è già acquisito
+    private void applyBoundaryConstraints(Board1 ctx){
         Boundary bounds = ctx.getBounds();
         if (pos.x() + radius > bounds.x1()){
             pos = new P2d(bounds.x1() - radius, pos.y());

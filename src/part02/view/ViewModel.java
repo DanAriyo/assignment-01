@@ -1,9 +1,9 @@
-package part01.view;
+package part02.view;
 
 import part01.model.Board1;
 import util.P2d;
-import util.Role;
 import util.Pair;
+import util.Role;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;

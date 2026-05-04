@@ -4,17 +4,17 @@ PCD a.y. 2024-2025 - ISI LM UNIBO - Cesena Campus
 
 v1.0.0-20260320
 
-This sketch (`pcd.sketch01`) shows an example of a board, with a number of small balls and one player ball moving and bouncing. The behaviour of the program is governed by a `main loop`, repeatedly computing the state of the board and rendering a new frame.
+This sketch (`pcd.sketch01`) shows an example of a board1, with a number of small balls and one player ball moving and bouncing. The behaviour of the program is governed by a `main loop`, repeatedly computing the state of the board1 and rendering a new frame.
 
 ### About the Main Loop
 
 At each cycle, the main loop:
 - Checks if it is time to kick the player ball
-- Computes the next board state, depending on how much time is elapsed
-- Updates the part01.view part01.model with the updated board state
+- Computes the next board1 state, depending on how much time is elapsed
+- Updates the part01.view part01.model with the updated board1 state
 - Renders a new frame, updating synchronously the part01.view with the updated part01.view part01.model
 
-The board state involves a sequence of steps:
+The board1 state involves a sequence of steps:
 - Updating the state of the player ball and of each small balls
   - the velocity is updated by applying the friction factor
   - the position is updated given the velocity and the elapsed time
@@ -41,12 +41,12 @@ Rendering is requested by the thread running the main loop when calling `part01.
 
 ### About Scale
 
-Three different board configurations represented by the class `BoardConf` can be tried:
+Three different board1 configurations represented by the class `BoardConf` can be tried:
 - minimal: 2 small balls 
 - large: 400 small balls
 - massive: 4500 small balls
 
-The configutation is set when configuring the board, before starting the simulation loop. 
+The configutation is set when configuring the board1, before starting the simulation loop. 
 
 **FOCUS POINT**: the minimal and large configuration typically shows a good frame rate - higher than 25 frame per second (fps) - with current PCs. Instead, the massive configuration in this implementation typically has a poor frame rate (less that 20 fps). A concurrent version of the program could be useful to improve this.
 
