@@ -1,4 +1,4 @@
-package part02.model;
+package util;
 
 public record P2d(double x, double y)  {
 

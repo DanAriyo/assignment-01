@@ -1,7 +1,7 @@
 package util.boardConf;
 
 import part01.model.Ball;
-import part01.model.Boundary;
+import util.Boundary;
 import part01.model.Hole;
 import util.Pair;
 

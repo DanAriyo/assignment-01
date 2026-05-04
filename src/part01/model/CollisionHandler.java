@@ -1,5 +1,9 @@
 package part01.model;
 
+import util.P2d;
+import util.Role;
+import util.V2d;
+
 import static part01.model.Ball.RESTITUTION_FACTOR;
 
 public class CollisionHandler {

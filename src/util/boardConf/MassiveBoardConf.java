@@ -1,7 +1,7 @@
 package util.boardConf;
 
 import part01.model.*;
-import util.Pair;
+import util.*;
 
 import java.util.ArrayList;
 import java.util.List;

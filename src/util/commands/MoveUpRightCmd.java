@@ -1,7 +1,7 @@
 package util.commands;
 
 import part01.model.Board;
-import part01.model.V2d;
+import util.V2d;
 
 public class MoveUpRightCmd implements Cmd {
     @Override

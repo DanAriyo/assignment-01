@@ -2,7 +2,7 @@ package part01.controller;
 
 import util.commands.Cmd;
 import part01.model.Board;
-import part01.model.Role;
+import util.Role;
 import util.BoundedBuffer;
 import util.BoundedBufferImpl;
 

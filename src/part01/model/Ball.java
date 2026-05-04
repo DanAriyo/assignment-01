@@ -1,5 +1,10 @@
 package part01.model;
 
+import util.Boundary;
+import util.P2d;
+import util.Role;
+import util.V2d;
+
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 

@@ -1,5 +1,7 @@
 package part01.model;
 
+import util.Role;
+
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 

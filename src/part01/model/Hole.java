@@ -1,5 +1,7 @@
 package part01.model;
 
+import util.P2d;
+
 public class Hole {
 
     private final P2d pos;

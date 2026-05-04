@@ -1,8 +1,8 @@
 package part01.view;
 
 import part01.model.Board;
-import part01.model.P2d;
-import part01.model.Role;
+import util.P2d;
+import util.Role;
 import util.Pair;
 
 import java.util.ArrayList;

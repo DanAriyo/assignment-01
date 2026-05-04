@@ -1,5 +1,8 @@
 package part01.model;
 
+import util.Boundary;
+import util.Role;
+import util.V2d;
 import util.boardConf.BoardConf;
 import util.Pair;
 

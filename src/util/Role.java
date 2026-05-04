@@ -1,4 +1,4 @@
-package part01.model;
+package util;
 
 public enum Role {
     PLAYER, BOT, GENERIC

@@ -1,7 +1,7 @@
 package part01.controller;
 
 import part01.model.Board;
-import part01.model.V2d;
+import util.V2d;
 
 import java.util.Random;
 
