@@ -1,6 +1,6 @@
 package part01.model;
 
-import part01.model.boardConf.BoardConf;
+import util.boardConf.BoardConf;
 import util.Pair;
 
 import java.util.*;

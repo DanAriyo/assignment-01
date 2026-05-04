@@ -1,4 +1,4 @@
-package part01.model.boardConf;
+package util.boardConf;
 
 import part01.model.Ball;
 import part01.model.Boundary;
