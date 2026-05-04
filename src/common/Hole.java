@@ -1,4 +1,4 @@
-package part01.model;
+package common;
 
 import util.P2d;
 

@@ -1,5 +1,6 @@
-package part01.model;
+package common;
 
+import part01.model.Board;
 import util.Boundary;
 import util.P2d;
 import util.Role;
@@ -8,10 +9,7 @@ import util.V2d;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * La classe Ball funge da Monitor (Componente Passivo Condiviso).
- * Gli Agenti (Thread/Executor) interagiscono con essa in modo thread-safe.
- */
+
 public class Ball {
 
     private final int id; // Aggiunto per ordinamento lock anti-deadlock

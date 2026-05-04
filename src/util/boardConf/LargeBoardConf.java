@@ -1,6 +1,7 @@
 package util.boardConf;
 
-import part01.model.*;
+import common.Ball;
+import common.Hole;
 import util.*;
 
 import java.util.ArrayList;

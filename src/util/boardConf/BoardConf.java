@@ -1,8 +1,8 @@
 package util.boardConf;
 
-import part01.model.Ball;
+import common.Ball;
 import util.Boundary;
-import part01.model.Hole;
+import common.Hole;
 import util.Pair;
 
 import java.util.List;

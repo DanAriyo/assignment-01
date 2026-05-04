@@ -1,5 +1,9 @@
 package part01.model;
 
+import common.Ball;
+import common.CollisionHandler;
+import common.Hole;
+import common.Referee;
 import util.Boundary;
 import util.Role;
 import util.V2d;

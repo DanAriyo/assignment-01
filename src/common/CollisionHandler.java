@@ -1,10 +1,10 @@
-package part01.model;
+package common;
 
 import util.P2d;
 import util.Role;
 import util.V2d;
 
-import static part01.model.Ball.RESTITUTION_FACTOR;
+import static common.Ball.RESTITUTION_FACTOR;
 
 public class CollisionHandler {
 
