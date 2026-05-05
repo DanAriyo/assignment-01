@@ -25,20 +25,20 @@ public class Board2 implements Board {
     private final Lock mutex;
     private final CollisionHandler handler;
     private Referee referee;
+    private final Condition startCollisions;
+    private final Condition collisionsDone;
+    private int finishedCount = 0;
+    private boolean canStart = false;
 
-    private final Random rand = new Random(2);
-    private long lastBotKickTime = 0;
     private final ExecutorService executor;
-    private final ExecutorService physicsExecutor;
 
 
     public Board2(){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
         executor = Executors.newVirtualThreadPerTaskExecutor();
-        physicsExecutor = Executors.newFixedThreadPool(
-                Runtime.getRuntime().availableProcessors()
-        );
+        startCollisions = mutex.newCondition();
+        collisionsDone = mutex.newCondition();
 
     }
     
@@ -59,27 +59,54 @@ public class Board2 implements Board {
     }
 
     public void updateState(long dt) {
-
-        try{
+        try {
             this.mutex.lock();
             playerBall.updateState(dt, this);
-            botBall.updateState(dt,this);
-            for (var b: balls) {
-                b.updateState(dt, this);
-            }
-        } finally{
+            botBall.updateState(dt, this);
+            for (var b : balls) { b.updateState(dt, this); }
+
+            canStart = true;
+            finishedCount = 0;
+            startCollisions.signalAll();
+        } finally {
             this.mutex.unlock();
         }
 
+
+        List<Boundary> zones = createQuadrants(this.bounds);
         List<Callable<Void>> tasks = new ArrayList<>();
 
-        tasks.add(() -> { handleBallsCollision(); return null; });
+// Definiamo un margine basato sulla dimensione delle palline (es. 0.1 o il raggio max)
+        double margin = 0.05;
+
+        for (Boundary zone : zones) {
+            // Usiamo il metodo contains con il parametro margin che abbiamo aggiunto al record
+            List<Ball> filteredBalls = balls.stream()
+                    .filter(b -> zone.contains(b.getPos(), margin))
+                    .toList();
+
+            tasks.add(new ZoneTask(zone, filteredBalls, this.handler));
+        }
 
         try {
+            // I 4 ZoneTask ora elaboreranno anche le palline "sconfinanti"
             executor.invokeAll(tasks);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+
+        try {
+            mutex.lock();
+            while (finishedCount < 2) {
+                collisionsDone.await();
+            }
+            canStart = false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            mutex.unlock();
+        }
+
     }
 
     public void checkEndGameConditions() {
@@ -194,10 +221,15 @@ public class Board2 implements Board {
     }
 
     public void handlePlayerCollision(){
-        List<Ball> playerSnap;
+        List<Ball> playerSnap = List.of();
         try {
             mutex.lock();
+            while (!canStart) {
+                startCollisions.await();
+            }
             playerSnap = new ArrayList<>(this.balls);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             mutex.unlock();
         }
@@ -211,13 +243,28 @@ public class Board2 implements Board {
         if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
             this.referee.setGameOver(this.botBall.getRole());
         }
+
+        try {
+            mutex.lock();
+            finishedCount++;
+            if (finishedCount == 2) {
+                collisionsDone.signal();
+            }
+        } finally {
+            mutex.unlock();
+        }
     }
 
     public void handleBotCollision(){
-        List<Ball> botSnap;
+        List<Ball> botSnap = List.of();
         try {
             mutex.lock();
+            while (!canStart) {
+                startCollisions.await();
+            }
             botSnap = new ArrayList<>(balls);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             mutex.unlock();
         }
@@ -231,6 +278,16 @@ public class Board2 implements Board {
         if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
             this.referee.setGameOver(this.playerBall.getRole());
         }
+        try {
+            mutex.lock();
+            finishedCount++;
+            if (finishedCount == 2) {
+                collisionsDone.signal();
+            }
+        } finally {
+            mutex.unlock();
+        }
+
     }
 
     public void handleBallsCollision() {
@@ -264,6 +321,28 @@ public class Board2 implements Board {
         } finally {
             mutex.unlock();
         }
+    }
+
+    private List<Boundary> createQuadrants(Boundary bounds) {
+        double x0 = bounds.getX0();
+        double y0 = bounds.getY0();
+        double x1 = bounds.getX1();
+        double y1 = bounds.getY1();
+
+        double midX = (x0 + x1) / 2.0;
+        double midY = (y0 + y1) / 2.0;
+
+        List<Boundary> quadrants = new ArrayList<>();
+
+        quadrants.add(new Boundary(x0, y0, midX, midY));
+
+        quadrants.add(new Boundary(midX, y0, x1, midY));
+
+        quadrants.add(new Boundary(x0, midY, midX, y1));
+
+        quadrants.add(new Boundary(midX, midY, x1, y1));
+
+        return quadrants;
     }
 
 
