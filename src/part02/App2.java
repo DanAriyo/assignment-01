@@ -25,15 +25,13 @@ public class App2 {
          */
 
         //var boardConf = new MinimalBoardConf();
-        var boardConf = new LargeBoardConf();
-        //var boardConf = new MassiveBoardConf();
+        //var boardConf = new LargeBoardConf();
+        var boardConf = new MassiveBoardConf();
 
 
-        int MAX_SIZE = 1;
-        BoundedBuffer<Cmd> buffer = new BoundedBufferImpl<>(MAX_SIZE);
-        Board2 board2 = new Board2(buffer);
+        Board2 board2 = new Board2();
         board2.init(boardConf);
-        var controller = new PlayerController(board2,buffer);
+        var controller = new PlayerController(board2);
 
         ViewModel viewModel = new ViewModel();
         View view = new View(viewModel, 1200, 800, controller);

@@ -7,17 +7,17 @@ import java.util.Random;
 
 public class BotController extends Thread{
 
-    private Board1 board1;
+    private Board1 board2;
 
-    public BotController(Board1 board1){
-        this.board1 = board1;
+    public BotController(Board1 board2){
+        this.board2 = board2;
 
     }
 
     public void run(){
         System.out.println("Bot Controller thread started.");
         long t0 = System.currentTimeMillis();
-        var ball = board1.getBotBall();
+        var ball = board2.getBotBall();
         var rand = new Random(2);
         var lastKickTime = t0;
         while (!Thread.currentThread().isInterrupted()) {
@@ -28,7 +28,7 @@ public class BotController extends Thread{
                     ball.kick(v);
                     lastKickTime = System.currentTimeMillis();
                 }
-                board1.handleBotCollision();
+                board2.handleBotCollision();
 
             } catch (Exception ex) {
                 ex.printStackTrace();

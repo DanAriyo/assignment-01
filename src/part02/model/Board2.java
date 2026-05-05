@@ -25,17 +25,20 @@ public class Board2 implements Board {
     private final Lock mutex;
     private final CollisionHandler handler;
     private Referee referee;
-    private final BoundedBuffer<Cmd> cmdBuffer;
+
     private final Random rand = new Random(2);
     private long lastBotKickTime = 0;
     private final ExecutorService executor;
+    private final ExecutorService physicsExecutor;
 
 
-    public Board2(BoundedBuffer<Cmd> buffer){
+    public Board2(){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
-        cmdBuffer = buffer;
         executor = Executors.newVirtualThreadPerTaskExecutor();
+        physicsExecutor = Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors()
+        );
 
     }
     
@@ -69,11 +72,6 @@ public class Board2 implements Board {
         }
 
         List<Callable<Void>> tasks = new ArrayList<>();
-
-        tasks.add(() -> {
-            handleInput();
-            return null;
-        });
 
         tasks.add(() -> {
             handleBotInput();
@@ -242,7 +240,7 @@ public class Board2 implements Board {
         }
     }
 
-    public void handleBallsCollision(){
+    public void handleBallsCollision() {
         List<Ball> snap;
         try {
             mutex.lock();
@@ -257,7 +255,7 @@ public class Board2 implements Board {
             }
         }
 
-        try{
+        try {
             mutex.lock();
             balls.removeIf(b -> {
                 if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
@@ -266,17 +264,13 @@ public class Board2 implements Board {
                 }
                 return false;
             });
-            if(balls.isEmpty()){
+
+            if (balls.isEmpty()) {
                 this.checkEndGameConditions();
             }
-        }finally {
+        } finally {
             mutex.unlock();
         }
-    }
-
-    public void handleInput(){
-        Optional<Cmd> cmd = cmdBuffer.poll();
-        cmd.ifPresent(c -> c.execute(this));
     }
 
     public void handleBotInput() {

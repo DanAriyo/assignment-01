@@ -9,15 +9,29 @@ import util.commands.Cmd;
 
 import java.util.Optional;
 
-public class PlayerController {
+public class PlayerController  extends Thread{
 
     private BoundedBuffer<Cmd> cmdBuffer;
     private final Board2 board2;
+    private static int MAX_SIZE = 1;
 
-    public PlayerController(Board2 board2, BoundedBuffer<Cmd> buffer){
-
+    public PlayerController(Board2 board2){
+        this.cmdBuffer = new BoundedBufferImpl<>(MAX_SIZE);
         this.board2 = board2;
-        cmdBuffer = buffer;
+    }
+
+    public void run() {
+        System.out.println("Player Controller thread started.");
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Optional<Cmd> cmd = cmdBuffer.poll();
+                cmd.ifPresent(c -> c.execute(board2));
+                board2.handlePlayerCollision();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public void notifyNewCmd(Cmd cmd) {
