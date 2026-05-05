@@ -1,15 +1,16 @@
 package part02.controller;
 
 import part01.model.Board1;
+import part02.model.Board2;
 import util.V2d;
 
 import java.util.Random;
 
 public class BotController extends Thread{
 
-    private Board1 board2;
+    private Board2 board2;
 
-    public BotController(Board1 board2){
+    public BotController(Board2 board2){
         this.board2 = board2;
 
     }

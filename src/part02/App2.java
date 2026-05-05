@@ -1,6 +1,7 @@
 package part02;
 
 
+import part02.controller.BotController;
 import part02.controller.PlayerController;
 import part02.model.Board2;
 import part02.view.View;
@@ -31,10 +32,14 @@ public class App2 {
 
         Board2 board2 = new Board2();
         board2.init(boardConf);
-        var controller = new PlayerController(board2);
+        var playerController = new PlayerController(board2);
+        var botController = new BotController(board2);
 
         ViewModel viewModel = new ViewModel();
-        View view = new View(viewModel, 1200, 800, controller);
+        View view = new View(viewModel, 1200, 800, playerController);
+
+        playerController.start();
+        botController.start();
 
         viewModel.update(board2, 0);
         view.render();

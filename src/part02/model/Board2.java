@@ -73,13 +73,6 @@ public class Board2 implements Board {
 
         List<Callable<Void>> tasks = new ArrayList<>();
 
-        tasks.add(() -> {
-            handleBotInput();
-            return null;
-        });
-
-        tasks.add(() -> { handlePlayerCollision(); return null; });
-        tasks.add(() -> { handleBotCollision(); return null; });
         tasks.add(() -> { handleBallsCollision(); return null; });
 
         try {
@@ -272,18 +265,6 @@ public class Board2 implements Board {
             mutex.unlock();
         }
     }
-
-    public void handleBotInput() {
-        long currentTime = System.currentTimeMillis();
-        if (botBall.getVel().abs() < 0.05 && (currentTime - lastBotKickTime > 2000)) {
-            var angle = rand.nextDouble() * Math.PI * 0.25;
-            var v = new V2d(Math.cos(angle), Math.sin(angle)).mul(1.5);
-            botBall.kick(v);
-            lastBotKickTime = currentTime;
-        }
-    }
-
-
 
 
 }
