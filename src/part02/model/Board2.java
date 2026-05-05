@@ -15,7 +15,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Board2 implements Board {
 
-    private static final int MAX_SIZE = 1;
     private List<Ball> balls;
     private Ball playerBall;
     private Ball botBall;
@@ -31,13 +30,11 @@ public class Board2 implements Board {
     private long lastBotKickTime = 0;
 
 
-    public Board2(){
+    public Board2(BoundedBuffer<Cmd> buffer){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
-        cmdBuffer = new BoundedBufferImpl<>(MAX_SIZE);
-        executor = Executors.newFixedThreadPool(
-                Runtime.getRuntime().availableProcessors()
-        );
+        cmdBuffer = buffer;
+        executor = Executors.newVirtualThreadPerTaskExecutor();
 
     }
     

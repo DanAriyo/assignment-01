@@ -13,12 +13,11 @@ public class PlayerController {
 
     private BoundedBuffer<Cmd> cmdBuffer;
     private final Board2 board2;
-    private static int MAX_SIZE = 1;
 
-    public PlayerController(Board2 board2){
+    public PlayerController(Board2 board2, BoundedBuffer<Cmd> buffer){
 
         this.board2 = board2;
-        cmdBuffer = new BoundedBufferImpl<>(MAX_SIZE);
+        cmdBuffer = buffer;
     }
 
     public void notifyNewCmd(Cmd cmd) {

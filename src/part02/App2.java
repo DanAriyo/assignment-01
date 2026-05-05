@@ -6,8 +6,11 @@ import part02.model.Board2;
 import part02.view.View;
 import part02.view.ViewModel;
 import part02.model.Board2;
+import util.BoundedBuffer;
+import util.BoundedBufferImpl;
 import util.boardConf.LargeBoardConf;
 import util.boardConf.MassiveBoardConf;
+import util.commands.Cmd;
 
 
 public class App2 {
@@ -25,9 +28,12 @@ public class App2 {
         var boardConf = new LargeBoardConf();
         //var boardConf = new MassiveBoardConf();
 
-        Board2 board2 = new Board2();
+
+        int MAX_SIZE = 1;
+        BoundedBuffer<Cmd> buffer = new BoundedBufferImpl<>(MAX_SIZE);
+        Board2 board2 = new Board2(buffer);
         board2.init(boardConf);
-        var controller = new PlayerController(board2);
+        var controller = new PlayerController(board2,buffer);
 
         ViewModel viewModel = new ViewModel();
         View view = new View(viewModel, 1200, 800, controller);
