@@ -5,6 +5,7 @@ import util.*;
 import util.boardConf.BoardConf;
 import util.commands.Cmd;
 
+import javax.xml.crypto.KeySelectorException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -26,8 +27,8 @@ public class Board2 implements Board {
     private Referee referee;
     private final BoundedBuffer<Cmd> cmdBuffer;
     private final Random rand = new Random(2);
-    private final ExecutorService executor;
     private long lastBotKickTime = 0;
+    private final ExecutorService executor;
 
 
     public Board2(BoundedBuffer<Cmd> buffer){
@@ -83,12 +84,11 @@ public class Board2 implements Board {
         tasks.add(() -> { handleBotCollision(); return null; });
         tasks.add(() -> { handleBallsCollision(); return null; });
 
-        try{
+        try {
             executor.invokeAll(tasks);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
         }
-
     }
 
     public void checkEndGameConditions() {
@@ -203,7 +203,7 @@ public class Board2 implements Board {
     }
 
     public void handlePlayerCollision(){
-        List<Ball> playerSnap = List.of();
+        List<Ball> playerSnap;
         try {
             mutex.lock();
             playerSnap = new ArrayList<>(this.balls);
@@ -223,7 +223,7 @@ public class Board2 implements Board {
     }
 
     public void handleBotCollision(){
-        List<Ball> botSnap = List.of();
+        List<Ball> botSnap;
         try {
             mutex.lock();
             botSnap = new ArrayList<>(balls);
@@ -243,7 +243,7 @@ public class Board2 implements Board {
     }
 
     public void handleBallsCollision(){
-        List<Ball> snap = List.of();
+        List<Ball> snap;
         try {
             mutex.lock();
             snap = new ArrayList<>(this.balls);
