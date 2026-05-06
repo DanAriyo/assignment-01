@@ -31,13 +31,14 @@ public class Board2 implements Board {
     private boolean canStart = false;
     private List<Boundary> zones = List.of();
     private final ExecutorService executor;
-    private final double margin = 0.05;
+    private final double margin = 0.01;
 
 
     public Board2(){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
-        executor = Executors.newVirtualThreadPerTaskExecutor();
+        int nThreads = Runtime.getRuntime().availableProcessors();
+        executor = Executors.newFixedThreadPool(nThreads);
         startCollisions = mutex.newCondition();
         collisionsDone = mutex.newCondition();
 
@@ -54,7 +55,7 @@ public class Board2 implements Board {
             scores.put(Role.PLAYER, 0);
             scores.put(Role.BOT, 0);
             this.referee = new Referee();
-            this.zones = createQuadrants(this.getBounds());
+            this.zones = createQuadrants(this.getBounds(),16,8);
         }finally {
             this.mutex.unlock();
         }
@@ -65,21 +66,38 @@ public class Board2 implements Board {
             this.mutex.lock();
             playerBall.updateState(dt, this);
             botBall.updateState(dt, this);
-            for (var b : balls) { b.updateState(dt, this); }
+            for (Ball b : balls) b.updateState(dt, this);
 
             canStart = true;
             finishedCount = 0;
-            startCollisions.signalAll();
+            startCollisions.signalAll(); // Sveglia Player e Bot
         } finally {
             this.mutex.unlock();
         }
 
+        int numZones = zones.size();
+        List<List<Ball>> zoneLists = new ArrayList<>(numZones);
+        for (int i = 0; i < numZones; i++) {
+            zoneLists.add(new ArrayList<>());
+        }
+
+        for (Ball b : balls) {
+            P2d pos = b.getPos();
+            for (int i = 0; i < numZones; i++) {
+                if (zones.get(i).contains(pos, margin)) {
+                    zoneLists.get(i).add(b);
+                }
+            }
+        }
+
+
         List<Callable<Void>> tasks = new ArrayList<>();
-        for (Boundary zone : zones) {
-            List<Ball> filteredBalls = balls.stream()
-                    .filter(b -> zone.contains(b.getPos(), margin))
-                    .toList();
-            tasks.add(new ZoneTask(zone, filteredBalls,playerBall, botBall,this.handler,margin));
+        for (int i = 0; i < numZones; i++) {
+            Boundary currentZone = zones.get(i);
+            Ball pInZone = currentZone.contains(playerBall.getPos(), margin) ? playerBall : null;
+            Ball bInZone = currentZone.contains(botBall.getPos(), margin) ? botBall : null;
+
+            tasks.add(new ZoneTask(zoneLists.get(i), pInZone, bInZone, this.handler));
         }
 
         try {
@@ -87,10 +105,7 @@ public class Board2 implements Board {
 
             mutex.lock();
             try {
-                while (finishedCount < 2) {
-                    collisionsDone.await();
-                }
-
+                while (finishedCount < 2) collisionsDone.await();
                 balls.removeIf(b -> {
                     if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
                         b.getLastHitter().ifPresent(this::incrementScore);
@@ -99,10 +114,9 @@ public class Board2 implements Board {
                     return false;
                 });
 
-                if (balls.isEmpty()) {
+                if(balls.isEmpty()){
                     this.checkEndGameConditions();
                 }
-
                 canStart = false;
             } finally {
                 mutex.unlock();
@@ -270,26 +284,27 @@ public class Board2 implements Board {
 
     }
 
-    private List<Boundary> createQuadrants(Boundary bounds) {
+    private List<Boundary> createQuadrants(Boundary bounds, int cols, int rows) {
         double x0 = bounds.getX0();
         double y0 = bounds.getY0();
         double x1 = bounds.getX1();
         double y1 = bounds.getY1();
 
-        double midX = (x0 + x1) / 2.0;
-        double midY = (y0 + y1) / 2.0;
+        double zoneWidth = (x1 - x0) / cols;
+        double zoneHeight = (y1 - y0) / rows;
 
-        List<Boundary> quadrants = new ArrayList<>();
+        List<Boundary> zones = new ArrayList<>();
 
-        quadrants.add(new Boundary(x0, y0, midX, midY));
-
-        quadrants.add(new Boundary(midX, y0, x1, midY));
-
-        quadrants.add(new Boundary(x0, midY, midX, y1));
-
-        quadrants.add(new Boundary(midX, midY, x1, y1));
-
-        return quadrants;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                double curX0 = x0 + j * zoneWidth;
+                double curY0 = y0 + i * zoneHeight;
+                double curX1 = curX0 + zoneWidth;
+                double curY1 = curY0 + zoneHeight;
+                zones.add(new Boundary(curX0, curY0, curX1, curY1));
+            }
+        }
+        return zones;
     }
 
 

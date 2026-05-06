@@ -26,8 +26,8 @@ public class App2 {
          */
 
         //var boardConf = new MinimalBoardConf();
-        //var boardConf = new LargeBoardConf();
-        var boardConf = new MassiveBoardConf();
+        var boardConf = new LargeBoardConf();
+        //var boardConf = new MassiveBoardConf();
 
 
         Board2 board2 = new Board2();
