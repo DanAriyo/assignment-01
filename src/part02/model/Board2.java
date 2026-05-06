@@ -79,7 +79,7 @@ public class Board2 implements Board {
             List<Ball> filteredBalls = balls.stream()
                     .filter(b -> zone.contains(b.getPos(), margin))
                     .toList();
-            tasks.add(new ZoneTask(zone, filteredBalls, this.handler));
+            tasks.add(new ZoneTask(zone, filteredBalls,playerBall, botBall,this.handler,margin));
         }
 
         try {
@@ -224,27 +224,15 @@ public class Board2 implements Board {
     }
 
     public void handlePlayerCollision(){
-        List<Ball> playerSnap = List.of();
         try {
             mutex.lock();
             while (!canStart) {
                 startCollisions.await();
             }
-            playerSnap = new ArrayList<>(this.balls);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             mutex.unlock();
-        }
-
-        for (var b: playerSnap) {
-            if (playerBall.getVel().abs() > 1e-3){
-                handler.resolveCollision(playerBall, b);
-            }
-        }
-        handler.resolveCollision(playerBall,botBall);
-        if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
-            this.referee.setGameOver(this.botBall.getRole());
         }
 
         try {
@@ -259,28 +247,17 @@ public class Board2 implements Board {
     }
 
     public void handleBotCollision(){
-        List<Ball> botSnap = List.of();
         try {
             mutex.lock();
             while (!canStart) {
                 startCollisions.await();
             }
-            botSnap = new ArrayList<>(balls);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             mutex.unlock();
         }
 
-        for (var b: botSnap) {
-            if(botBall.getVel().abs() > 1e-3){
-                handler.resolveCollision(botBall,b);
-            }
-        }
-        handler.resolveCollision(playerBall,botBall);
-        if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
-            this.referee.setGameOver(this.playerBall.getRole());
-        }
         try {
             mutex.lock();
             finishedCount++;
