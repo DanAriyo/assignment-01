@@ -6,12 +6,7 @@ import part02.controller.PlayerController;
 import part02.model.Board2;
 import part02.view.View;
 import part02.view.ViewModel;
-import part02.model.Board2;
-import util.BoundedBuffer;
-import util.BoundedBufferImpl;
-import util.boardConf.LargeBoardConf;
-import util.boardConf.MassiveBoardConf;
-import util.commands.Cmd;
+import common.boardConf.MassiveBoardConf;
 
 
 public class App2 {
@@ -26,8 +21,8 @@ public class App2 {
          */
 
         //var boardConf = new MinimalBoardConf();
-        var boardConf = new LargeBoardConf();
-        //var boardConf = new MassiveBoardConf();
+        //var boardConf = new LargeBoardConf();
+        var boardConf = new MassiveBoardConf();
 
 
         Board2 board2 = new Board2();

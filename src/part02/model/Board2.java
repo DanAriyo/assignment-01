@@ -2,10 +2,8 @@ package part02.model;
 
 import common.*;
 import util.*;
-import util.boardConf.BoardConf;
-import util.commands.Cmd;
+import common.boardConf.BoardConf;
 
-import javax.xml.crypto.KeySelectorException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;

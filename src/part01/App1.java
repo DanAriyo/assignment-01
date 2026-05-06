@@ -4,8 +4,7 @@ import part01.controller.BallsController;
 import part01.controller.BotController;
 import part01.controller.PlayerController;
 import part01.model.Board1;
-import util.boardConf.LargeBoardConf;
-import util.boardConf.MassiveBoardConf;
+import common.boardConf.MassiveBoardConf;
 import part01.view.View;
 import part01.view.ViewModel;
 

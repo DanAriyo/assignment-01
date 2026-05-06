@@ -1,4 +1,4 @@
-package util.boardConf;
+package common.boardConf;
 
 import common.Ball;
 import common.Hole;
@@ -8,10 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MinimalBoardConf implements BoardConf {
+public class LargeBoardConf implements BoardConf {
 
 	private final AtomicInteger counter = new AtomicInteger(0);
-
 
 	@Override
 	public Ball getPlayerBall() {
@@ -22,13 +21,20 @@ public class MinimalBoardConf implements BoardConf {
 	public Ball getBotBall() {
 		return new Ball(counter.incrementAndGet(),new P2d(0.5, -0.5), 0.06, 1, new V2d(0,0), Role.BOT);
 	}
+
 	@Override
 	public List<Ball> getSmallBalls() {
+		var ballRadius = 0.01;
         var balls = new ArrayList<Ball>();
-    	var b1 = new Ball(counter.incrementAndGet(),new P2d(0, 0.5), 0.05, 0.75, new V2d(0,0), Role.GENERIC);
-    	var b2 = new Ball(counter.incrementAndGet(),new P2d(0.05, 0.55), 0.025, 0.25, new V2d(0,0), Role.GENERIC);
-    	balls.add(b1);
-    	balls.add(b2);
+
+    	for (int row = 0; row < 20; row++) {
+    		for (int col = 0; col < 20; col++) {
+        		var px = -0.25 + col*0.025;
+        		var py =  row*0.025;
+        		var b = new Ball(counter.incrementAndGet(),new P2d(px, py), ballRadius, 0.25, new V2d(0,0), Role.GENERIC);
+            	balls.add(b);
+    		}
+    	}		
     	return balls;
 	}
 
@@ -37,9 +43,7 @@ public class MinimalBoardConf implements BoardConf {
 		return new Pair<>(new Hole(new P2d(-1.5,1.0),0.2), new Hole(new P2d(1.5,1.0),0.2));
 	}
 
-	@Override
 	public Boundary getBoardBoundary() {
         return new Boundary(-1.5,-1.0,1.5,1.0);
 	}
-
 }

@@ -4,7 +4,7 @@ import common.*;
 import util.Boundary;
 import util.Role;
 import util.V2d;
-import util.boardConf.BoardConf;
+import common.boardConf.BoardConf;
 import util.Pair;
 
 import java.util.*;

@@ -1,4 +1,4 @@
-package util.boardConf;
+package common.boardConf;
 
 import common.Ball;
 import util.Boundary;
