@@ -117,6 +117,12 @@ public class Board2 implements Board {
                 if(balls.isEmpty()){
                     this.checkEndGameConditions();
                 }
+                if(handler.checkCollision(playerBall,holes.getX()) || handler.checkCollision(playerBall,holes.getY())){
+                    this.referee.setGameOver(this.botBall.getRole());
+                }
+                if(handler.checkCollision(botBall,holes.getX()) || handler.checkCollision(botBall,holes.getY())){
+                    this.referee.setGameOver(this.playerBall.getRole());
+                }
                 canStart = false;
             } finally {
                 mutex.unlock();
