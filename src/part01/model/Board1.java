@@ -52,7 +52,7 @@ public class Board1 implements Board {
     }
 
     public void updateState(long dt) {
-
+        long t0 = System.nanoTime();
         try{
             this.mutex.lock();
             playerBall.updateState(dt, this);
@@ -65,11 +65,17 @@ public class Board1 implements Board {
             finishedCount = 0;
             startCollisions.signalAll();
 
+            long tWaitStart = System.nanoTime();
             while (finishedCount < 3) {
                 collisionsDone.await();
             }
+            long tWaitEnd = System.nanoTime();
             canStart = false;
+            long tEnd = System.nanoTime();
 
+
+            System.out.printf("Frame Total: %.2fms | Barrier Wait: %.2fms\n",
+                    (tEnd - t0) / 1e6, (tWaitEnd - tWaitStart) / 1e6);
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
