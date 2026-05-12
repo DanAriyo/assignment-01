@@ -253,7 +253,7 @@ public class Board2 implements Board {
         }
     }
 
-    public void handlePlayerCollision(){
+    public void handlePlayerInput(){
         try {
             mutex.lock();
             while (!canStart) {
@@ -276,7 +276,7 @@ public class Board2 implements Board {
         }
     }
 
-    public void handleBotCollision(){
+    public void handleBotInput(){
         try {
             mutex.lock();
             while (!canStart) {

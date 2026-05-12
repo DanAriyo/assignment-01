@@ -1,6 +1,5 @@
 package part02.controller;
 
-import part01.model.Board1;
 import part02.model.Board2;
 import util.V2d;
 
@@ -29,7 +28,7 @@ public class BotController extends Thread{
                     ball.kick(v);
                     lastKickTime = System.currentTimeMillis();
                 }
-                board2.handleBotCollision();
+                board2.handleBotInput();
 
             } catch (Exception ex) {
                 ex.printStackTrace();

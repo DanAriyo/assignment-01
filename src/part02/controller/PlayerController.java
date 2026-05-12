@@ -1,6 +1,5 @@
 package part02.controller;
 
-import part01.model.Board1;
 import part02.model.Board2;
 import util.BoundedBuffer;
 import util.BoundedBufferImpl;
@@ -26,7 +25,7 @@ public class PlayerController  extends Thread{
             try {
                 Optional<Cmd> cmd = cmdBuffer.poll();
                 cmd.ifPresent(c -> c.execute(board2));
-                board2.handlePlayerCollision();
+                board2.handlePlayerInput();
 
             } catch (Exception ex) {
                 ex.printStackTrace();
