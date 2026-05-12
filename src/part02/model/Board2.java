@@ -35,7 +35,7 @@ public class Board2 implements Board {
     public Board2(BoardConf conf){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
-        int nThreads = Runtime.getRuntime().availableProcessors();
+        int nThreads = Runtime.getRuntime().availableProcessors() + 1;
         executor = Executors.newFixedThreadPool(nThreads);
         startCollisions = mutex.newCondition();
         collisionsDone = mutex.newCondition();
