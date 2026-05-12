@@ -53,13 +53,14 @@ public class Board2 implements Board {
             scores.put(Role.PLAYER, 0);
             scores.put(Role.BOT, 0);
             this.referee = new Referee();
-            this.zones = createQuadrants(this.getBounds(),16,8);
+            this.zones = createQuadrants(this.getBounds(),16,16);
         }finally {
             this.mutex.unlock();
         }
     }
 
     public void updateState(long dt) {
+        long t0 = System.nanoTime();
         try {
             this.mutex.lock();
             playerBall.updateState(dt, this);
@@ -72,6 +73,7 @@ public class Board2 implements Board {
         } finally {
             this.mutex.unlock();
         }
+        long t1 = System.nanoTime();
 
         int numZones = zones.size();
         List<List<Ball>> zoneLists = new ArrayList<>(numZones);
@@ -97,13 +99,15 @@ public class Board2 implements Board {
 
             tasks.add(new ZoneTask(zoneLists.get(i), pInZone, bInZone, this.handler));
         }
+        long t2 = System.nanoTime();
 
         try {
             executor.invokeAll(tasks);
-
+            long t3 = System.nanoTime();
             mutex.lock();
             try {
                 while (finishedCount < 2) collisionsDone.await();
+                long t4 = System.nanoTime();
                 balls.removeIf(b -> {
                     if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
                         b.getLastHitter().ifPresent(this::incrementScore);
@@ -122,6 +126,14 @@ public class Board2 implements Board {
                     this.referee.setGameOver(this.playerBall.getRole());
                 }
                 canStart = false;
+
+                System.out.printf("Pos: %.2fms | Distr: %.2fms | Physics(Exec): %.2fms | Wait Contrl: %.2fms | Total: %.2fms%n",
+                        (t1 - t0) / 1e6, // Tempo posizioni
+                        (t2 - t1) / 1e6, // Tempo distribuzione in zone
+                        (t3 - t2) / 1e6, // Tempo calcolo parallelo collisioni
+                        (t4 - t3) / 1e6, // Tempo attesa sincronizzazione (Barriera)
+                        (t4 - t0) / 1e6  // Tempo totale update
+                );
             } finally {
                 mutex.unlock();
             }
