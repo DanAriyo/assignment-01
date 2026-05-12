@@ -32,31 +32,23 @@ public class Board2 implements Board {
     private final double margin = 0.01;
 
 
-    public Board2(){
+    public Board2(BoardConf conf){
         this.mutex = new ReentrantLock();
         this.handler = new CollisionHandler();
         int nThreads = Runtime.getRuntime().availableProcessors();
         executor = Executors.newFixedThreadPool(nThreads);
         startCollisions = mutex.newCondition();
         collisionsDone = mutex.newCondition();
+        balls = conf.getSmallBalls();
+        playerBall = conf.getPlayerBall();
+        bounds = conf.getBoardBoundary();
+        holes = conf.getHoles();
+        botBall = conf.getBotBall();
+        scores.put(Role.PLAYER, 0);
+        scores.put(Role.BOT, 0);
+        this.referee = new Referee();
+        this.zones = createQuadrants(this.getBounds(),16,16);
 
-    }
-    
-    public void init(BoardConf conf) {
-        try{
-            this.mutex.lock();
-            balls = conf.getSmallBalls();
-            playerBall = conf.getPlayerBall();
-            bounds = conf.getBoardBoundary();
-            holes = conf.getHoles();
-            botBall = conf.getBotBall();
-            scores.put(Role.PLAYER, 0);
-            scores.put(Role.BOT, 0);
-            this.referee = new Referee();
-            this.zones = createQuadrants(this.getBounds(),16,16);
-        }finally {
-            this.mutex.unlock();
-        }
     }
 
     public void updateState(long dt) {

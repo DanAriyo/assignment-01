@@ -25,8 +25,7 @@ public class App2 {
         var boardConf = new MassiveBoardConf();
 
 
-        Board2 board2 = new Board2();
-        board2.init(boardConf);
+        Board2 board2 = new Board2(boardConf);
         var playerController = new PlayerController(board2);
         var botController = new BotController(board2);
 
