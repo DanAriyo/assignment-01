@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ViewFrame extends JFrame implements KeyListener {
 
@@ -21,6 +23,8 @@ public class ViewFrame extends JFrame implements KeyListener {
 	private Integer firstKey = null;
 	private Timer timeoutTimer;
 	private final PlayerController playerController;
+    private final Set<Integer> pressedKeys = new HashSet<>();
+
 
 	public ViewFrame(ViewModel model, int w, int h, PlayerController playerController){
 		this.model = model;
@@ -51,75 +55,51 @@ public class ViewFrame extends JFrame implements KeyListener {
 	}
 
 	@Override public void keyTyped(KeyEvent e) {}
-	@Override public void keyReleased(KeyEvent e) {}
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (playerController.isGameOver()) return;
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (playerController.isGameOver()) return; // Blocca input se finito
+        int keyCode = e.getKeyCode();
+        if (isArrowKey(keyCode)) {
+            pressedKeys.add(keyCode);
+            processCurrentKeys();
+        }
+    }
 
-		int currentKey = e.getKeyCode();
-		if (isArrowKey(currentKey)) {
-			handleComboInput(currentKey);
-		}
-	}
-
-	private void handleComboInput(int currentKey) {
-		if (firstKey == null) {
-			firstKey = currentKey;
-			if (timeoutTimer == null) {
-				timeoutTimer = new Timer(INPUT_TIMEOUT, arg -> {
-					if (firstKey != null) {
-						playerController.notifyNewCmd(createComboCommand(firstKey, firstKey));
-						firstKey = null;
-					}
-				});
-				timeoutTimer.setRepeats(false);
-			}
-			timeoutTimer.restart();
-		} else {
-			timeoutTimer.stop();
-			playerController.notifyNewCmd(createComboCommand(firstKey, currentKey));
-			firstKey = null;
-		}
-	}
+    @Override
+    public void keyReleased(KeyEvent e) {
+        pressedKeys.remove(e.getKeyCode());
+    }
 
 	private boolean isArrowKey(int k) {
 		return k == KeyEvent.VK_UP || k == KeyEvent.VK_DOWN || k == KeyEvent.VK_LEFT || k == KeyEvent.VK_RIGHT;
 	}
 
-	private Cmd createComboCommand(int k1, int k2) {
-		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_RIGHT ||
-				k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_UP) {
-			return new MoveUpRightCmd();
-		}
-		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_LEFT ||
-				k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_UP) {
-			return new MoveUpLeftCmd();
-		}
-		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_LEFT ||
-				k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_DOWN) {
-			return new MoveDownLeftCmd();
-		}
-		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_RIGHT ||
-				k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_DOWN) {
-			return new MoveDownRightCmd();
-		}
-		if (k1 == KeyEvent.VK_DOWN && k2 == KeyEvent.VK_DOWN) {
-			return new MoveDownCmd();
-		}
-		if (k1 == KeyEvent.VK_UP && k2 == KeyEvent.VK_UP) {
-			return new MoveUpCmd();
-		}
+    private void processCurrentKeys() {
+        if (pressedKeys.isEmpty()) return;
 
-		if (k1 == KeyEvent.VK_RIGHT && k2 == KeyEvent.VK_RIGHT) {
-			return new MoveRightCmd();
-		}
+        Cmd command = createCommandFromSet(pressedKeys);
+        playerController.notifyNewCmd(command);
+    }
 
-		if (k1 == KeyEvent.VK_LEFT && k2 == KeyEvent.VK_LEFT) {
-			return new MoveLeftCmd();
-		}
-		return new DefaultCmd();
-	}
+    private Cmd createCommandFromSet(Set<Integer> keys) {
+        boolean up = keys.contains(KeyEvent.VK_UP);
+        boolean down = keys.contains(KeyEvent.VK_DOWN);
+        boolean left = keys.contains(KeyEvent.VK_LEFT);
+        boolean right = keys.contains(KeyEvent.VK_RIGHT);
+
+        if (up && right) return new MoveUpRightCmd();
+        if (up && left)  return new MoveUpLeftCmd();
+        if (down && left) return new MoveDownLeftCmd();
+        if (down && right) return new MoveDownRightCmd();
+
+        if (up)    return new MoveUpCmd();
+        if (down)  return new MoveDownCmd();
+        if (left)  return new MoveLeftCmd();
+        if (right) return new MoveRightCmd();
+
+        return new DefaultCmd();
+    }
 
 	private void setupRenderingHints(Graphics2D g2) {
 		// Disattiviamo l'anti-aliasing per le forme geometriche (palline)

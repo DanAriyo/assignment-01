@@ -219,9 +219,7 @@ public class Board2 implements Board {
     public void applyImpulseToPlayerBall(V2d vel){
         try{
             this.mutex.lock();
-            if(this.playerBall.getVel().abs() < 0.05){
-                this.playerBall.kick(vel);
-            }
+            this.playerBall.kick(vel);
         }finally {
             this.mutex.unlock();
         }
