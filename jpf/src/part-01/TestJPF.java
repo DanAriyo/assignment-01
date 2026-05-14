@@ -1,4 +1,4 @@
-package jpf.src-demo;
+package jpf.src.part01;
 
 import gov.nasa.jpf.vm.Verify;
 import part01.Board1; // Il tuo pacchetto originale
