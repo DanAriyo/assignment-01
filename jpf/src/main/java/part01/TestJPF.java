@@ -3,6 +3,7 @@ package part01;
 import gov.nasa.jpf.vm.Verify;
 
 
+
 public class TestJPF {
     static class Worker extends Thread {
 		protected void log(String msg) {
@@ -12,6 +13,7 @@ public class TestJPF {
     }
 }
 	}
+
 
 	static class MyWorkerA extends Worker {
 		public void run() {
@@ -28,6 +30,7 @@ public class TestJPF {
 	}
 
     public static void main(String[] args) throws Exception {
+    
 		Thread th0 = new MyWorkerA();
 		Thread th1 = new MyWorkerB();
 		th0.start();
