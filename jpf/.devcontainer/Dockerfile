@@ -20,10 +20,10 @@ RUN mkdir -p /home/vscode/.jpf && \
     chown -R vscode:vscode /home/vscode/.jpf
 
 # 3. Prepare the working directory required by the professor
-RUN mkdir -p /pcd-jpf && chown -R vscode:vscode /pcd-jpf
+RUN mkdir -p /jpf && chown -R vscode:vscode /jpf
 
 # 4. Alias 'jpf' for convenience in the terminal
 RUN echo "alias jpf='java -jar /opt/jpf/jpf-core/build/RunJPF.jar'" >> /home/vscode/.bashrc
 
-# Set the working directory to /pcd-jpf for compatibility with the professor's instructions
-WORKDIR /pcd-jpf
+
+WORKDIR /jpf

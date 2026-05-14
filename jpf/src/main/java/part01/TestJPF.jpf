@@ -1,0 +1,10 @@
+# 1. Classe principale da testare (incluso il package completo)
+target = part01.TestJPF
+
+# 2. Percorsi dove JPF deve cercare le classi (.class)
+# Aggiungiamo la cartella target di Maven (dove finirà TestJPF)
+classpath = ./target/classes
+
+
+# 4. Istruzioni per l'output (per vedere i tuoi System.out.print)
+vm.tree_output = true

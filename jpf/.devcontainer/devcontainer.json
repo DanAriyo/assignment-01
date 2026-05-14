@@ -12,7 +12,7 @@
   },
   "remoteUser": "vscode",
   // Puntiamo alla cartella superiore per vedere tutto il progetto
-  "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces/project_root,type=bind",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/jpf,type=bind",
   // Apriamo VS Code direttamente sulla cartella dei test per comodità
-  "workspaceFolder": "/workspaces/project_root/jpf"
+  "workspaceFolder": "/jpf"
 }
