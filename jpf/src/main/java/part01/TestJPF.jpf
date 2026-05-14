@@ -5,6 +5,9 @@ target = part01.TestJPF
 # Aggiungiamo la cartella target di Maven (dove finirà TestJPF)
 classpath = ./target/classes
 
+listener=gov.nasa.jpf.listener.StateSpaceDot
+
 
 # 4. Istruzioni per l'output (per vedere i tuoi System.out.print)
 vm.tree_output = true
+vm.path_output = true
