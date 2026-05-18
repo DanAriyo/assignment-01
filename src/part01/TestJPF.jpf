@@ -1,0 +1,20 @@
+# Nome completo della classe (compreso il package)
+target = part01.TestJPF
+
+# Percorso assoluto verso le classi compilate nel container
+classpath = /pcd-jpf/target/classes
+
+
+# --- CONFIGURAZIONE ANALISI ---
+
+# Rileva Race Condition (accessi non sincronizzati a variabili condivise)
+listener = gov.nasa.jpf.listener.PreciseRaceDetector
+
+# Controlla la presenza di Deadlock
+search.check_deadlock = true
+
+# Opzioni di report (mostra l'errore e la traccia dei thread in caso di violazione)
+report.console.property_violation = error,snapshot,trace
+
+# Forza JPF a stampare dove sta guardando (utile per il debug)
+vm.sourcepath = /pcd-jpf/src
