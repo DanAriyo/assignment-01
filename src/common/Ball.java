@@ -1,6 +1,5 @@
 package common;
 
-import part01.model.Board1;
 import util.Boundary;
 import util.P2d;
 import util.Role;
@@ -75,17 +74,17 @@ public class Ball {
 
     private void applyBoundaryConstraints(Board ctx){
         Boundary bounds = ctx.getBounds();
-        if (pos.x() + radius > bounds.x1()){
-            pos = new P2d(bounds.x1() - radius, pos.y());
+        if (pos.getX() + radius > bounds.getX1()){
+            pos = new P2d(bounds.getX1() - radius, pos.getY());
             vel = vel.getSwappedX();
-        } else if (pos.x() - radius < bounds.x0()){
-            pos = new P2d(bounds.x0() + radius, pos.y());
+        } else if (pos.getX() - radius < bounds.getX0()){
+            pos = new P2d(bounds.getX0() + radius, pos.getY());
             vel = vel.getSwappedX();
-        } else if (pos.y() + radius > bounds.y1()){
-            pos = new P2d(pos.x(), bounds.y1() - radius);
+        } else if (pos.getY() + radius > bounds.getY1()){
+            pos = new P2d(pos.getX(), bounds.getY1() - radius);
             vel = vel.getSwappedY();
-        } else if (pos.y() - radius < bounds.y0()){
-            pos = new P2d(pos.x(), bounds.y0() + radius);
+        } else if (pos.getY() - radius < bounds.getY0()){
+            pos = new P2d(pos.getX(), bounds.getY0() + radius);
             vel = vel.getSwappedY();
         }
     }

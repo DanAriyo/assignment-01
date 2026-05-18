@@ -17,8 +17,8 @@ public class CollisionHandler {
 
         /* compute dv = b.pos - a.pos vector */
 
-        double dx   = ball.getPos().x() - hole.getPos().x();
-        double dy   = ball.getPos().y() - hole.getPos().y();
+        double dx   = ball.getPos().getX() - hole.getPos().getX();
+        double dy   = ball.getPos().getY() - hole.getPos().getY();
         double dist = Math.hypot(dx, dy);
         double minD = hole.getRadius() + ball.getRadius();
 
@@ -56,8 +56,8 @@ public class CollisionHandler {
                 // 4. Eseguiamo la logica mentre abbiamo il controllo esclusivo di entrambe
                 updateLastHitter(a, b);
 
-                double dx = b.getPos().x() - a.getPos().x();
-                double dy = b.getPos().y() - a.getPos().y();
+                double dx = b.getPos().getX() - a.getPos().getX();
+                double dy = b.getPos().getY() - a.getPos().getY();
                 double dist = Math.hypot(dx, dy);
                 double minD = a.getRadius() + b.getRadius();
 
@@ -70,20 +70,20 @@ public class CollisionHandler {
 
                     // Aggiornamento posizioni (il Monitor gestisce la thread-safety interna)
                     double a_factor = overlap * (b.getMass() / totalM);
-                    a.setPos(new P2d(a.getPos().x() - nx * a_factor, a.getPos().y() - ny * a_factor));
+                    a.setPos(new P2d(a.getPos().getX() - nx * a_factor, a.getPos().getY() - ny * a_factor));
 
                     double b_factor = overlap * (a.getMass() / totalM);
-                    b.setPos(new P2d(b.getPos().x() + nx * b_factor, b.getPos().y() + ny * b_factor));
+                    b.setPos(new P2d(b.getPos().getX() + nx * b_factor, b.getPos().getY() + ny * b_factor));
 
                     // Aggiornamento velocità
-                    double dvx = b.getVel().x() - a.getVel().x();
-                    double dvy = b.getVel().y() - a.getVel().y();
+                    double dvx = b.getVel().getX() - a.getVel().getX();
+                    double dvy = b.getVel().getY() - a.getVel().getY();
                     double dvn = dvx * nx + dvy * ny;
 
                     if (dvn <= 0) {
                         double imp = -(1 + RESTITUTION_FACTOR) * dvn / (1.0 / a.getMass() + 1.0 / b.getMass());
-                        a.setVel(new V2d(a.getVel().x() - (imp / a.getMass()) * nx, a.getVel().y() - (imp / a.getMass()) * ny));
-                        b.setVel(new V2d(b.getVel().x() + (imp / b.getMass()) * nx, b.getVel().y() + (imp / b.getMass()) * ny));
+                        a.setVel(new V2d(a.getVel().getX() - (imp / a.getMass()) * nx, a.getVel().getY() - (imp / a.getMass()) * ny));
+                        b.setVel(new V2d(b.getVel().getX() + (imp / b.getMass()) * nx, b.getVel().getY() + (imp / b.getMass()) * ny));
                     }
                 }
             } finally {

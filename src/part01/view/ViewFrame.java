@@ -1,5 +1,6 @@
 package part01.view;
 
+import common.BallViewInfo;
 import part01.controller.PlayerController;
 import util.commands.*;
 import util.P2d;
@@ -151,8 +152,8 @@ public class ViewFrame extends JFrame implements KeyListener {
 		private void drawHoles(Graphics2D g2) {
 			g2.setColor(Color.BLACK);
 			g2.setStroke(new BasicStroke(2));
-			renderCircle(g2, model.getHoles().getX().pos(), model.getHoles().x().radius(), true);
-			renderCircle(g2, model.getHoles().getY().pos(), model.getHoles().y().radius(), true);
+			renderCircle(g2, model.getHoles().getX().pos(), model.getHoles().getX().radius(), true);
+			renderCircle(g2, model.getHoles().getY().pos(), model.getHoles().getY().radius(), true);
 		}
 
 		private void drawSmallBalls(Graphics2D g2) {
@@ -172,8 +173,8 @@ public class ViewFrame extends JFrame implements KeyListener {
 			if (ball == null) return;
 			g2.setColor(color);
 			g2.setStroke(new BasicStroke(3));
-			int x = (int)(ox + ball.pos().x() * delta);
-			int y = (int)(oy - ball.pos().y() * delta);
+			int x = (int)(ox + ball.pos().getX() * delta);
+			int y = (int)(oy - ball.pos().getY() * delta);
 			int r = (int)(ball.radius() * delta);
 			g2.drawOval(x - r, y - r, r * 2, r * 2);
 			g2.drawString(label, x - 5, y + 5);
@@ -182,8 +183,8 @@ public class ViewFrame extends JFrame implements KeyListener {
 		private void renderCircle(Graphics2D g2, P2d pos, double radius, boolean fill) {
 			// Calcoliamo i valori una sola volta
 			int r = (int)(radius * delta);
-			int x = (int)(ox + pos.x() * delta) - r;
-			int y = (int)(oy - pos.y() * delta) - r;
+			int x = (int)(ox + pos.getX() * delta) - r;
+			int y = (int)(oy - pos.getY() * delta) - r;
 			int diameter = r * 2;
 
 			if (fill) {

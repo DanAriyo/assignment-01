@@ -101,7 +101,7 @@ public class Board2 implements Board {
                 while (finishedCount < 2) collisionsDone.await();
                 long t4 = System.nanoTime();
                 balls.removeIf(b -> {
-                    if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
+                    if (handler.checkCollision(b, holes.getX()) || handler.checkCollision(b, holes.getY())) {
                         b.getLastHitter().ifPresent(this::incrementScore);
                         return true;
                     }

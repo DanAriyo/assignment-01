@@ -287,7 +287,7 @@ public class Board1 implements Board {
         try{
             mutex.lock();
             balls.removeIf(b -> {
-                if (handler.checkCollision(b, holes.x()) || handler.checkCollision(b, holes.y())) {
+                if (handler.checkCollision(b, holes.getX()) || handler.checkCollision(b, holes.getY())) {
                     b.getLastHitter().ifPresent(this::incrementScore);
                     return true;
                 }

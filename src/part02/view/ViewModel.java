@@ -1,5 +1,8 @@
 package part02.view;
 
+
+import common.BallViewInfo;
+import common.HoleViewInfo;
 import part02.model.Board2;
 import util.P2d;
 import util.Pair;
@@ -9,15 +12,14 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-record BallViewInfo(P2d pos, double radius) {}
-record HoleViewInfo(P2d pos, double radius){}
+
 
 public class ViewModel {
 
 	private final ArrayList<BallViewInfo> balls;
 	private BallViewInfo player;
 	private BallViewInfo bot;
-	private Pair<HoleViewInfo,HoleViewInfo> holes;
+	private Pair<HoleViewInfo, HoleViewInfo> holes;
 	private int framePerSec;
 	private Pair<Integer,Integer> scoresPair = null;
 	private final Lock mutex;
@@ -34,8 +36,8 @@ public class ViewModel {
 			this.mutex.lock();
 			this.scoresPair = new Pair<>(board2.getScore(Role.PLAYER), board2.getScore(Role.BOT));
 			var holesPair = board2.getHoles();
-			holes = new Pair<>(new HoleViewInfo(holesPair.x().getPos(),holesPair.x().getRadius()),
-					new HoleViewInfo(holesPair.y().getPos(),holesPair.y().getRadius()));
+			holes = new Pair<>(new HoleViewInfo(holesPair.getX().getPos(),holesPair.getX().getRadius()),
+					new HoleViewInfo(holesPair.getY().getPos(),holesPair.getY().getRadius()));
 			balls.clear();
 			for (var b: board2.getBalls()) {
 				balls.add(new BallViewInfo(b.getPos(), b.getRadius()));
