@@ -74,8 +74,8 @@ public class Board1 implements Board {
             long tEnd = System.nanoTime();
 
 
-            System.out.printf("Frame Total: %.2fms | Barrier Wait: %.2fms\n",
-                    (tEnd - t0) / 1e6, (tWaitEnd - tWaitStart) / 1e6);
+            //System.out.printf("Frame Total: %.2fms | Barrier Wait: %.2fms\n",
+                    //(tEnd - t0) / 1e6, (tWaitEnd - tWaitStart) / 1e6);
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

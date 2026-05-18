@@ -27,17 +27,7 @@ public class TestJPF {
         botThread.start();
         ballsThread.start();
 
-        // Simuliamo un numero limitato di frame (es. 2 o 3)
-        // JPF esplorerà tutti gli incroci possibili in questi frame.
-        for (int i = 0; i < 2; i++) {
-            System.out.println("--- Inizio Frame " + i + " ---");
-
-            // Il main thread agisce da "Master" chiamando updateState
-            // che contiene la logica di signalAll() e await()
-            board1.updateState(20);
-
-            System.out.println("--- Fine Frame " + i + " ---");
-        }
+        board1.updateState(20);
 
         // Importante: dovresti avere un metodo per fermare i thread pulitamente
         // altrimenti JPF continuerà l'analisi all'infinito.
