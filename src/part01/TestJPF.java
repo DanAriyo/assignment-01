@@ -1,37 +1,32 @@
 package part01;
 
 import common.boardConf.BoardConf;
+import common.boardConf.BoardConfDemo;
 import common.boardConf.MinimalBoardConf;
-import part01.controller.BallsController;
-import part01.controller.BotController;
-import part01.controller.PlayerController;
+import part01.controller.*;
 import part01.model.Board1;
+import part01.model.Board1Demo;
 
 public class TestJPF {
 
     public static void main(String[] args) {
         // Usiamo una configurazione minimale: 2 palline sono sufficienti
         // per testare se i thread collidono o si aspettano correttamente.
-        BoardConf boardConf = new MinimalBoardConf();
+        BoardConf boardConfDemo = new BoardConfDemo();
 
-        Board1 board1 = new Board1();
-        board1.init(boardConf);
+        Board1Demo board1Demo = new Board1Demo(boardConfDemo);
 
         // Inizializziamo i controller (i tuoi thread Worker)
-        PlayerController playerThread = new PlayerController(board1);
-        BotController botThread = new BotController(board1);
-        BallsController ballsThread = new BallsController(board1);
+        PlayerControllerDemo playerThread = new PlayerControllerDemo(board1Demo);
+        BotControllerDemo botThread = new BotControllerDemo(board1Demo);
+        BallsControllerDemo ballsThread = new BallsControllerDemo(board1Demo);
 
         // Facciamo partire i thread
         playerThread.start();
         botThread.start();
         ballsThread.start();
 
-        board1.updateState(20);
-
-        // Importante: dovresti avere un metodo per fermare i thread pulitamente
-        // altrimenti JPF continuerà l'analisi all'infinito.
-        // Se non lo hai, possiamo forzare l'uscita (non elegantissimo ma efficace per JPF):
+        board1Demo.updateState();
         System.exit(0);
     }
 }

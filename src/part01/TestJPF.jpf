@@ -14,7 +14,7 @@ listener = gov.nasa.jpf.listener.PreciseRaceDetector
 search.check_deadlock = true
 
 # Opzioni di report (mostra l'errore e la traccia dei thread in caso di violazione)
-report.console.property_violation = error,trace
+report.console.property_violation = error,snapshot,trace
 
 # Forza JPF a stampare dove sta guardando (utile per il debug)
 vm.sourcepath = /pcd-jpf/src
